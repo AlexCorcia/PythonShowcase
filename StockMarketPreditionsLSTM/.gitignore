@@ -1,0 +1,42 @@
+# Entorno virtual
+venv/
+.env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Archivos de entorno
+.env
+.env.*
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# Tests
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints
+
+# SQLite
+*.sqlite3
+
+# Cache
+.cache/
