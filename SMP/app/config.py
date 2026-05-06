@@ -1,2 +1,0 @@
-DEFAULT_SYMBOLS = ["AAPL", "MSFT", "GOOG", "TSLA", "NVDA"]
-DEFAULT_MODELS = ["baseline"]
