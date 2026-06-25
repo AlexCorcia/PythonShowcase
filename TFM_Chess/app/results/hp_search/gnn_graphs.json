@@ -2,9 +2,11 @@
   "model": "gnn",
   "features": "graphs",
   "search_kind": "random",
-  "n_train": 2520,
-  "n_val": 840,
-  "n_test": 840,
+  "evaluation_unit": "game (mean snapshot probabilities)",
+  "n_train": 59850,
+  "n_test": 19953,
+  "n_train_games": 5985,
+  "n_test_games": 1996,
   "search_space": {
     "hidden_dim": [
       64,
@@ -31,11 +33,11 @@
       3
     ],
     "batch_size": [
-      32,
-      64
+      256,
+      512
     ]
   },
-  "n_trials": 15,
+  "n_trials": 10,
   "all_trials": [
     {
       "config": {
@@ -44,129 +46,51 @@
         "weight_decay": 1e-05,
         "dropout": 0.5,
         "num_layers": 3,
-        "batch_size": 32
+        "batch_size": 256
       },
-      "epochs_trained": 19,
-      "best_val_f1_macro": 0.15798729737702685,
-      "val_metrics": {
-        "accuracy": 0.2369047619047619,
-        "f1_macro": 0.15798729737702685,
-        "f1_weighted": 0.15798729737702685,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.2311212814645309,
-            "recall": 0.48095238095238096,
-            "f1-score": 0.312210200927357,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.24317617866004962,
-            "recall": 0.4666666666666667,
-            "f1-score": 0.3197389885807504,
-            "support": 210.0
-          },
-          "accuracy": 0.2369047619047619,
-          "macro avg": {
-            "precision": 0.11857436503114513,
-            "recall": 0.2369047619047619,
-            "f1-score": 0.15798729737702685,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.11857436503114513,
-            "recall": 0.2369047619047619,
-            "f1-score": 0.15798729737702685,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              0,
-              101,
-              0,
-              109
-            ],
-            [
-              0,
-              101,
-              0,
-              109
-            ],
-            [
-              0,
-              123,
-              0,
-              87
-            ],
-            [
-              0,
-              112,
-              0,
-              98
-            ]
-          ]
-        }
-      },
+      "epochs_trained": 31,
+      "best_val_f1_macro": 0.3632549027999582,
       "test_metrics": {
-        "accuracy": 0.25595238095238093,
-        "f1_macro": 0.17093105176013978,
-        "f1_weighted": 0.17093105176013976,
+        "accuracy": 0.3772545090180361,
+        "f1_macro": 0.35600540856479723,
+        "f1_weighted": 0.3724218664464823,
         "classification_report": {
           "defensive": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
+            "precision": 0.3072289156626506,
+            "recall": 0.5396825396825397,
+            "f1-score": 0.3915547024952015,
+            "support": 378.0
           },
           "dynamic": {
-            "precision": 0.24116424116424118,
-            "recall": 0.5523809523809524,
-            "f1-score": 0.3357452966714906,
-            "support": 210.0
+            "precision": 0.24806201550387597,
+            "recall": 0.15023474178403756,
+            "f1-score": 0.1871345029239766,
+            "support": 426.0
           },
           "positional": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
+            "precision": 0.5489833641404805,
+            "recall": 0.4206798866855524,
+            "f1-score": 0.47634322373696875,
+            "support": 706.0
           },
           "tactical": {
-            "precision": 0.2757660167130919,
-            "recall": 0.4714285714285714,
-            "f1-score": 0.34797891036906853,
-            "support": 210.0
+            "precision": 0.3527204502814259,
+            "recall": 0.3868312757201646,
+            "f1-score": 0.3689892051030422,
+            "support": 486.0
           },
-          "accuracy": 0.25595238095238093,
+          "accuracy": 0.3772545090180361,
           "macro avg": {
-            "precision": 0.1292325644693333,
-            "recall": 0.25595238095238093,
-            "f1-score": 0.17093105176013978,
-            "support": 840.0
+            "precision": 0.3642486863971082,
+            "recall": 0.37435711096807356,
+            "f1-score": 0.35600540856479723,
+            "support": 1996.0
           },
           "weighted avg": {
-            "precision": 0.12923256446933326,
-            "recall": 0.25595238095238093,
-            "f1-score": 0.17093105176013976,
-            "support": 840.0
+            "precision": 0.39118804741737745,
+            "recall": 0.3772545090180361,
+            "f1-score": 0.3724218664464823,
+            "support": 1996.0
           }
         },
         "confusion_matrix": {
@@ -178,33 +102,112 @@
           ],
           "matrix": [
             [
-              0,
+              204,
+              35,
+              65,
+              74
+            ],
+            [
+              124,
+              64,
               104,
-              0,
-              106
+              134
             ],
             [
-              0,
-              116,
-              0,
-              94
+              195,
+              77,
+              297,
+              137
             ],
             [
-              0,
-              150,
-              0,
-              60
-            ],
-            [
-              0,
-              111,
-              0,
-              99
+              141,
+              82,
+              75,
+              188
             ]
           ]
         }
       },
-      "elapsed_seconds": 229.01
+      "snapshot_test_metrics": {
+        "accuracy": 0.3154412870245076,
+        "f1_macro": 0.3053824252056787,
+        "f1_weighted": 0.3164085045657678,
+        "classification_report": {
+          "defensive": {
+            "precision": 0.24969715324046032,
+            "recall": 0.43624338624338627,
+            "f1-score": 0.3176040061633282,
+            "support": 3780.0
+          },
+          "dynamic": {
+            "precision": 0.25053467766575005,
+            "recall": 0.19266917293233082,
+            "f1-score": 0.21782441227254615,
+            "support": 4256.0
+          },
+          "positional": {
+            "precision": 0.4604878048780488,
+            "recall": 0.3344197250956497,
+            "f1-score": 0.38745690362830404,
+            "support": 7057.0
+          },
+          "tactical": {
+            "precision": 0.2958998182185417,
+            "recall": 0.301440329218107,
+            "f1-score": 0.29864437875853633,
+            "support": 4860.0
+          },
+          "accuracy": 0.3154412870245076,
+          "macro avg": {
+            "precision": 0.3141548635007002,
+            "recall": 0.3161931533723684,
+            "f1-score": 0.3053824252056787,
+            "support": 19953.0
+          },
+          "weighted avg": {
+            "precision": 0.335682172252838,
+            "recall": 0.3154412870245076,
+            "f1-score": 0.3164085045657678,
+            "support": 19953.0
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "defensive",
+            "dynamic",
+            "positional",
+            "tactical"
+          ],
+          "matrix": [
+            [
+              1649,
+              592,
+              748,
+              791
+            ],
+            [
+              1275,
+              820,
+              1002,
+              1159
+            ],
+            [
+              2154,
+              1007,
+              2360,
+              1536
+            ],
+            [
+              1526,
+              854,
+              1015,
+              1465
+            ]
+          ]
+        }
+      },
+      "n_test_games": 1996,
+      "elapsed_seconds": 262.03
     },
     {
       "config": {
@@ -213,129 +216,51 @@
         "weight_decay": 0.001,
         "dropout": 0.2,
         "num_layers": 2,
-        "batch_size": 64
+        "batch_size": 512
       },
-      "epochs_trained": 23,
-      "best_val_f1_macro": 0.2154559801137262,
-      "val_metrics": {
-        "accuracy": 0.25833333333333336,
-        "f1_macro": 0.2154559801137262,
-        "f1_weighted": 0.21545598011372621,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.2523364485981308,
-            "recall": 0.2571428571428571,
-            "f1-score": 0.25471698113207547,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.2583732057416268,
-            "recall": 0.5142857142857142,
-            "f1-score": 0.34394904458598724,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.2644230769230769,
-            "recall": 0.2619047619047619,
-            "f1-score": 0.2631578947368421,
-            "support": 210.0
-          },
-          "accuracy": 0.25833333333333336,
-          "macro avg": {
-            "precision": 0.1937831828157086,
-            "recall": 0.2583333333333333,
-            "f1-score": 0.2154559801137262,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.19378318281570864,
-            "recall": 0.2583333333333333,
-            "f1-score": 0.21545598011372621,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              54,
-              112,
-              0,
-              44
-            ],
-            [
-              53,
-              108,
-              0,
-              49
-            ],
-            [
-              53,
-              97,
-              0,
-              60
-            ],
-            [
-              54,
-              101,
-              0,
-              55
-            ]
-          ]
-        }
-      },
+      "epochs_trained": 60,
+      "best_val_f1_macro": 0.3685857832917372,
       "test_metrics": {
-        "accuracy": 0.2154761904761905,
-        "f1_macro": 0.179020166388179,
-        "f1_weighted": 0.179020166388179,
+        "accuracy": 0.375751503006012,
+        "f1_macro": 0.3639975028349232,
+        "f1_weighted": 0.37552149532059526,
         "classification_report": {
           "defensive": {
-            "precision": 0.23783783783783785,
-            "recall": 0.20952380952380953,
-            "f1-score": 0.22278481012658227,
-            "support": 210.0
+            "precision": 0.3184818481848185,
+            "recall": 0.5105820105820106,
+            "f1-score": 0.39227642276422764,
+            "support": 378.0
           },
           "dynamic": {
-            "precision": 0.22572815533980584,
-            "recall": 0.44285714285714284,
-            "f1-score": 0.2990353697749196,
-            "support": 210.0
+            "precision": 0.27218934911242604,
+            "recall": 0.215962441314554,
+            "f1-score": 0.24083769633507854,
+            "support": 426.0
           },
           "positional": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
+            "precision": 0.5375494071146245,
+            "recall": 0.38526912181303113,
+            "f1-score": 0.44884488448844884,
+            "support": 706.0
           },
           "tactical": {
-            "precision": 0.18106995884773663,
-            "recall": 0.20952380952380953,
-            "f1-score": 0.19426048565121412,
-            "support": 210.0
+            "precision": 0.3534798534798535,
+            "recall": 0.39711934156378603,
+            "f1-score": 0.374031007751938,
+            "support": 486.0
           },
-          "accuracy": 0.2154761904761905,
+          "accuracy": 0.375751503006012,
           "macro avg": {
-            "precision": 0.1611589880063451,
-            "recall": 0.2154761904761905,
-            "f1-score": 0.179020166388179,
-            "support": 840.0
+            "precision": 0.37042511447293064,
+            "recall": 0.3772332288183454,
+            "f1-score": 0.3639975028349232,
+            "support": 1996.0
           },
           "weighted avg": {
-            "precision": 0.16115898800634507,
-            "recall": 0.2154761904761905,
-            "f1-score": 0.179020166388179,
-            "support": 840.0
+            "precision": 0.39460916410315056,
+            "recall": 0.375751503006012,
+            "f1-score": 0.37552149532059526,
+            "support": 1996.0
           }
         },
         "confusion_matrix": {
@@ -347,33 +272,112 @@
           ],
           "matrix": [
             [
-              44,
-              108,
-              0,
-              58
+              193,
+              47,
+              65,
+              73
             ],
             [
-              52,
-              93,
-              0,
-              65
+              101,
+              92,
+              96,
+              137
             ],
             [
-              31,
-              103,
-              0,
-              76
+              180,
+              111,
+              272,
+              143
             ],
             [
-              58,
-              108,
-              0,
-              44
+              132,
+              88,
+              73,
+              193
             ]
           ]
         }
       },
-      "elapsed_seconds": 44.03
+      "snapshot_test_metrics": {
+        "accuracy": 0.31218363153410517,
+        "f1_macro": 0.3030402093050395,
+        "f1_weighted": 0.31160134321185784,
+        "classification_report": {
+          "defensive": {
+            "precision": 0.2521020799527954,
+            "recall": 0.45211640211640214,
+            "f1-score": 0.32370489629699783,
+            "support": 3780.0
+          },
+          "dynamic": {
+            "precision": 0.24984005118362124,
+            "recall": 0.18350563909774437,
+            "f1-score": 0.21159577350311568,
+            "support": 4256.0
+          },
+          "positional": {
+            "precision": 0.45544763513513514,
+            "recall": 0.30565396060649,
+            "f1-score": 0.36581022640549476,
+            "support": 7057.0
+          },
+          "tactical": {
+            "precision": 0.29781626506024095,
+            "recall": 0.32551440329218106,
+            "f1-score": 0.31104994101454975,
+            "support": 4860.0
+          },
+          "accuracy": 0.31218363153410517,
+          "macro avg": {
+            "precision": 0.3138015078329482,
+            "recall": 0.3166976012782044,
+            "f1-score": 0.3030402093050395,
+            "support": 19953.0
+          },
+          "weighted avg": {
+            "precision": 0.3346737898762331,
+            "recall": 0.31218363153410517,
+            "f1-score": 0.31160134321185784,
+            "support": 19953.0
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "defensive",
+            "dynamic",
+            "positional",
+            "tactical"
+          ],
+          "matrix": [
+            [
+              1709,
+              549,
+              699,
+              823
+            ],
+            [
+              1285,
+              781,
+              933,
+              1257
+            ],
+            [
+              2246,
+              1004,
+              2157,
+              1650
+            ],
+            [
+              1539,
+              792,
+              947,
+              1582
+            ]
+          ]
+        }
+      },
+      "n_test_games": 1996,
+      "elapsed_seconds": 307.9
     },
     {
       "config": {
@@ -382,51 +386,51 @@
         "weight_decay": 1e-05,
         "dropout": 0.2,
         "num_layers": 2,
-        "batch_size": 32
+        "batch_size": 256
       },
-      "epochs_trained": 21,
-      "best_val_f1_macro": 0.2545257395609508,
-      "val_metrics": {
-        "accuracy": 0.2642857142857143,
-        "f1_macro": 0.2545257395609508,
-        "f1_weighted": 0.25452573956095087,
+      "epochs_trained": 44,
+      "best_val_f1_macro": 0.37335754816588573,
+      "test_metrics": {
+        "accuracy": 0.38226452905811625,
+        "f1_macro": 0.3683140454782987,
+        "f1_weighted": 0.38300049227005284,
         "classification_report": {
           "defensive": {
-            "precision": 0.26744186046511625,
-            "recall": 0.10952380952380952,
-            "f1-score": 0.1554054054054054,
-            "support": 210.0
+            "precision": 0.3120689655172414,
+            "recall": 0.47883597883597884,
+            "f1-score": 0.3778705636743215,
+            "support": 378.0
           },
           "dynamic": {
-            "precision": 0.26356589147286824,
-            "recall": 0.3238095238095238,
-            "f1-score": 0.2905982905982906,
-            "support": 210.0
+            "precision": 0.27696793002915454,
+            "recall": 0.22300469483568075,
+            "f1-score": 0.247074122236671,
+            "support": 426.0
           },
           "positional": {
-            "precision": 0.2824074074074074,
-            "recall": 0.2904761904761905,
-            "f1-score": 0.2863849765258216,
-            "support": 210.0
+            "precision": 0.5338078291814946,
+            "recall": 0.42492917847025496,
+            "f1-score": 0.47318611987381703,
+            "support": 706.0
           },
           "tactical": {
-            "precision": 0.25,
-            "recall": 0.3333333333333333,
-            "f1-score": 0.2857142857142857,
-            "support": 210.0
+            "precision": 0.3659491193737769,
+            "recall": 0.38477366255144035,
+            "f1-score": 0.37512537612838515,
+            "support": 486.0
           },
-          "accuracy": 0.2642857142857143,
+          "accuracy": 0.38226452905811625,
           "macro avg": {
-            "precision": 0.265853789836348,
-            "recall": 0.2642857142857143,
-            "f1-score": 0.2545257395609508,
-            "support": 840.0
+            "precision": 0.37219846102541687,
+            "recall": 0.3778858786733387,
+            "f1-score": 0.3683140454782987,
+            "support": 1996.0
           },
           "weighted avg": {
-            "precision": 0.26585378983634794,
-            "recall": 0.2642857142857143,
-            "f1-score": 0.25452573956095087,
-            "support": 840.0
+            "precision": 0.39612725780347086,
+            "recall": 0.38226452905811625,
+            "f1-score": 0.38300049227005284,
+            "support": 1996.0
           }
         },
         "confusion_matrix": {
@@ -438,73 +442,73 @@
           ],
           "matrix": [
             [
-              23,
-              76,
-              42,
+              181,
+              55,
+              73,
               69
             ],
             [
-              16,
-              68,
-              51,
-              75
+              94,
+              95,
+              109,
+              128
             ],
             [
-              23,
-              60,
-              61,
-              66
+              177,
+              102,
+              300,
+              127
             ],
             [
-              24,
-              54,
-              62,
-              70
+              128,
+              91,
+              80,
+              187
             ]
           ]
         }
       },
-      "test_metrics": {
-        "accuracy": 0.28809523809523807,
-        "f1_macro": 0.2802712354851432,
-        "f1_weighted": 0.28027123548514316,
+      "snapshot_test_metrics": {
+        "accuracy": 0.3206535358091515,
+        "f1_macro": 0.3116501885640668,
+        "f1_weighted": 0.3216361890006657,
         "classification_report": {
           "defensive": {
-            "precision": 0.297029702970297,
-            "recall": 0.14285714285714285,
-            "f1-score": 0.19292604501607716,
-            "support": 210.0
+            "precision": 0.2527881040892193,
+            "recall": 0.43174603174603177,
+            "f1-score": 0.31887456037514655,
+            "support": 3780.0
           },
           "dynamic": {
-            "precision": 0.2396694214876033,
-            "recall": 0.2761904761904762,
-            "f1-score": 0.25663716814159293,
-            "support": 210.0
+            "precision": 0.2664034021871203,
+            "recall": 0.20606203007518797,
+            "f1-score": 0.2323794382617912,
+            "support": 4256.0
           },
           "positional": {
-            "precision": 0.3076923076923077,
-            "recall": 0.38095238095238093,
-            "f1-score": 0.3404255319148936,
-            "support": 210.0
+            "precision": 0.45293551491819056,
+            "recall": 0.3334278021822304,
+            "f1-score": 0.3841005550114267,
+            "support": 7057.0
           },
           "tactical": {
-            "precision": 0.31223628691983124,
-            "recall": 0.3523809523809524,
-            "f1-score": 0.33109619686800895,
-            "support": 210.0
+            "precision": 0.3065868263473054,
+            "recall": 0.3160493827160494,
+            "f1-score": 0.31124620060790276,
+            "support": 4860.0
           },
-          "accuracy": 0.28809523809523807,
+          "accuracy": 0.3206535358091515,
           "macro avg": {
-            "precision": 0.28915692976750984,
-            "recall": 0.2880952380952381,
-            "f1-score": 0.2802712354851432,
-            "support": 840.0
+            "precision": 0.3196784618854589,
+            "recall": 0.3218213116798749,
+            "f1-score": 0.3116501885640668,
+            "support": 19953.0
           },
           "weighted avg": {
-            "precision": 0.2891569297675098,
-            "recall": 0.28809523809523807,
-            "f1-score": 0.28027123548514316,
-            "support": 840.0
+            "precision": 0.3395845145086558,
+            "recall": 0.3206535358091515,
+            "f1-score": 0.3216361890006657,
+            "support": 19953.0
           }
         },
         "confusion_matrix": {
@@ -516,33 +520,34 @@
           ],
           "matrix": [
             [
-              30,
-              61,
-              60,
-              59
+              1632,
+              600,
+              757,
+              791
             ],
             [
-              18,
-              58,
-              69,
-              65
+              1224,
+              877,
+              1024,
+              1131
             ],
             [
-              29,
-              62,
-              80,
-              39
+              2140,
+              1012,
+              2353,
+              1552
             ],
             [
-              24,
-              61,
-              51,
-              74
+              1460,
+              803,
+              1061,
+              1536
             ]
           ]
         }
       },
-      "elapsed_seconds": 31.07
+      "n_test_games": 1996,
+      "elapsed_seconds": 261.71
     },
     {
       "config": {
@@ -551,129 +556,51 @@
         "weight_decay": 0.001,
         "dropout": 0.5,
         "num_layers": 3,
-        "batch_size": 32
+        "batch_size": 256
       },
-      "epochs_trained": 16,
-      "best_val_f1_macro": 0.15702636452929536,
-      "val_metrics": {
-        "accuracy": 0.2523809523809524,
-        "f1_macro": 0.15702636452929536,
-        "f1_weighted": 0.1570263645292954,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.25888324873096447,
-            "recall": 0.24285714285714285,
-            "f1-score": 0.25061425061425063,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.25038880248833595,
-            "recall": 0.7666666666666667,
-            "f1-score": 0.37749120750293086,
-            "support": 210.0
-          },
-          "accuracy": 0.2523809523809524,
-          "macro avg": {
-            "precision": 0.1273180128048251,
-            "recall": 0.2523809523809524,
-            "f1-score": 0.15702636452929536,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.12731801280482513,
-            "recall": 0.2523809523809524,
-            "f1-score": 0.1570263645292954,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              0,
-              52,
-              0,
-              158
-            ],
-            [
-              0,
-              51,
-              0,
-              159
-            ],
-            [
-              0,
-              45,
-              0,
-              165
-            ],
-            [
-              0,
-              49,
-              0,
-              161
-            ]
-          ]
-        }
-      },
+      "epochs_trained": 34,
+      "best_val_f1_macro": 0.3725342637978283,
       "test_metrics": {
-        "accuracy": 0.24047619047619048,
-        "f1_macro": 0.1487786035856043,
-        "f1_weighted": 0.14877860358560432,
+        "accuracy": 0.3982965931863727,
+        "f1_macro": 0.3656880393720681,
+        "f1_weighted": 0.3882489466388836,
         "classification_report": {
           "defensive": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
+            "precision": 0.3325635103926097,
+            "recall": 0.38095238095238093,
+            "f1-score": 0.35511713933415534,
+            "support": 378.0
           },
           "dynamic": {
-            "precision": 0.2598870056497175,
-            "recall": 0.21904761904761905,
-            "f1-score": 0.23772609819121446,
-            "support": 210.0
+            "precision": 0.27710843373493976,
+            "recall": 0.1619718309859155,
+            "f1-score": 0.20444444444444446,
+            "support": 426.0
           },
           "positional": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
+            "precision": 0.496790757381258,
+            "recall": 0.5481586402266289,
+            "f1-score": 0.5212121212121212,
+            "support": 706.0
           },
           "tactical": {
-            "precision": 0.23529411764705882,
-            "recall": 0.7428571428571429,
-            "f1-score": 0.35738831615120276,
-            "support": 210.0
+            "precision": 0.3644859813084112,
+            "recall": 0.4012345679012346,
+            "f1-score": 0.3819784524975514,
+            "support": 486.0
           },
-          "accuracy": 0.24047619047619048,
+          "accuracy": 0.3982965931863727,
           "macro avg": {
-            "precision": 0.12379528082419408,
-            "recall": 0.24047619047619048,
-            "f1-score": 0.1487786035856043,
-            "support": 840.0
+            "precision": 0.36773717070430467,
+            "recall": 0.37307935501654,
+            "f1-score": 0.3656880393720681,
+            "support": 1996.0
           },
           "weighted avg": {
-            "precision": 0.1237952808241941,
-            "recall": 0.24047619047619048,
-            "f1-score": 0.14877860358560432,
-            "support": 840.0
+            "precision": 0.38658900868063467,
+            "recall": 0.3982965931863727,
+            "f1-score": 0.3882489466388836,
+            "support": 1996.0
           }
         },
         "confusion_matrix": {
@@ -685,33 +612,112 @@
           ],
           "matrix": [
             [
-              0,
-              50,
-              0,
-              160
+              144,
+              36,
+              113,
+              85
             ],
             [
-              0,
-              46,
-              0,
-              164
+              81,
+              69,
+              148,
+              128
             ],
             [
-              0,
-              27,
-              0,
-              183
+              115,
+              77,
+              387,
+              127
             ],
             [
-              0,
-              54,
-              0,
-              156
+              93,
+              67,
+              131,
+              195
             ]
           ]
         }
       },
-      "elapsed_seconds": 68.14
+      "snapshot_test_metrics": {
+        "accuracy": 0.33498721996692227,
+        "f1_macro": 0.31438346288695646,
+        "f1_weighted": 0.33187353385810187,
+        "classification_report": {
+          "defensive": {
+            "precision": 0.2624616564417178,
+            "recall": 0.3621693121693122,
+            "f1-score": 0.3043574922187639,
+            "support": 3780.0
+          },
+          "dynamic": {
+            "precision": 0.2594553706505295,
+            "recall": 0.1611842105263158,
+            "f1-score": 0.19884057971014493,
+            "support": 4256.0
+          },
+          "positional": {
+            "precision": 0.44985716433619005,
+            "recall": 0.42397619385007795,
+            "f1-score": 0.43653341114677563,
+            "support": 7057.0
+          },
+          "tactical": {
+            "precision": 0.300808526277104,
+            "recall": 0.33683127572016464,
+            "f1-score": 0.31780236847214133,
+            "support": 4860.0
+          },
+          "accuracy": 0.33498721996692227,
+          "macro avg": {
+            "precision": 0.31814567942638533,
+            "recall": 0.32104024806646764,
+            "f1-score": 0.31438346288695646,
+            "support": 19953.0
+          },
+          "weighted avg": {
+            "precision": 0.33743890970107576,
+            "recall": 0.33498721996692227,
+            "f1-score": 0.33187353385810187,
+            "support": 19953.0
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "defensive",
+            "dynamic",
+            "positional",
+            "tactical"
+          ],
+          "matrix": [
+            [
+              1369,
+              475,
+              1021,
+              915
+            ],
+            [
+              1019,
+              686,
+              1282,
+              1269
+            ],
+            [
+              1635,
+              809,
+              2992,
+              1621
+            ],
+            [
+              1193,
+              674,
+              1356,
+              1637
+            ]
+          ]
+        }
+      },
+      "n_test_games": 1996,
+      "elapsed_seconds": 236.24
     },
     {
       "config": {
@@ -720,129 +726,51 @@
         "weight_decay": 0.0001,
         "dropout": 0.2,
         "num_layers": 2,
-        "batch_size": 64
+        "batch_size": 512
       },
-      "epochs_trained": 16,
-      "best_val_f1_macro": 0.16587193564040947,
-      "val_metrics": {
-        "accuracy": 0.2523809523809524,
-        "f1_macro": 0.16587193564040947,
-        "f1_weighted": 0.1658719356404095,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.24715447154471545,
-            "recall": 0.7238095238095238,
-            "f1-score": 0.36848484848484847,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.3333333333333333,
-            "recall": 0.014285714285714285,
-            "f1-score": 0.0273972602739726,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.2638888888888889,
-            "recall": 0.2714285714285714,
-            "f1-score": 0.2676056338028169,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "accuracy": 0.2523809523809524,
-          "macro avg": {
-            "precision": 0.21109417344173442,
-            "recall": 0.2523809523809524,
-            "f1-score": 0.16587193564040947,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.21109417344173442,
-            "recall": 0.2523809523809524,
-            "f1-score": 0.1658719356404095,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              152,
-              1,
-              57,
-              0
-            ],
-            [
-              157,
-              3,
-              50,
-              0
-            ],
-            [
-              153,
-              0,
-              57,
-              0
-            ],
-            [
-              153,
-              5,
-              52,
-              0
-            ]
-          ]
-        }
-      },
+      "epochs_trained": 13,
+      "best_val_f1_macro": 0.3674224351849771,
       "test_metrics": {
-        "accuracy": 0.23214285714285715,
-        "f1_macro": 0.13541128539895742,
-        "f1_weighted": 0.13541128539895742,
+        "accuracy": 0.38527054108216435,
+        "f1_macro": 0.3763170449194592,
+        "f1_weighted": 0.3897062340907048,
         "classification_report": {
           "defensive": {
-            "precision": 0.25232198142414863,
-            "recall": 0.7761904761904762,
-            "f1-score": 0.3808411214953271,
-            "support": 210.0
+            "precision": 0.31047619047619046,
+            "recall": 0.4312169312169312,
+            "f1-score": 0.3610188261351052,
+            "support": 378.0
           },
           "dynamic": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
+            "precision": 0.2963855421686747,
+            "recall": 0.2887323943661972,
+            "f1-score": 0.2925089179548157,
+            "support": 426.0
           },
           "positional": {
-            "precision": 0.1702127659574468,
-            "recall": 0.1523809523809524,
-            "f1-score": 0.16080402010050251,
-            "support": 210.0
+            "precision": 0.5498084291187739,
+            "recall": 0.4065155807365439,
+            "f1-score": 0.46742671009771986,
+            "support": 706.0
           },
           "tactical": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
+            "precision": 0.36704119850187267,
+            "recall": 0.40329218106995884,
+            "f1-score": 0.3843137254901961,
+            "support": 486.0
           },
-          "accuracy": 0.23214285714285715,
+          "accuracy": 0.38527054108216435,
           "macro avg": {
-            "precision": 0.10563368684539887,
-            "recall": 0.23214285714285715,
-            "f1-score": 0.13541128539895742,
-            "support": 840.0
+            "precision": 0.3809278400663779,
+            "recall": 0.3824392718474078,
+            "f1-score": 0.3763170449194592,
+            "support": 1996.0
           },
           "weighted avg": {
-            "precision": 0.10563368684539885,
-            "recall": 0.23214285714285715,
-            "f1-score": 0.13541128539895742,
-            "support": 840.0
+            "precision": 0.40589529779239475,
+            "recall": 0.38527054108216435,
+            "f1-score": 0.3897062340907048,
+            "support": 1996.0
           }
         },
         "confusion_matrix": {
@@ -855,32 +783,111 @@
           "matrix": [
             [
               163,
-              2,
-              45,
-              0
+              69,
+              64,
+              82
             ],
             [
-              158,
-              0,
-              52,
-              0
+              85,
+              123,
+              95,
+              123
             ],
             [
-              178,
-              0,
-              32,
-              0
+              165,
+              121,
+              287,
+              133
             ],
             [
-              147,
-              4,
-              59,
-              0
+              112,
+              102,
+              76,
+              196
             ]
           ]
         }
       },
-      "elapsed_seconds": 23.38
+      "snapshot_test_metrics": {
+        "accuracy": 0.32356036686212597,
+        "f1_macro": 0.3159237195422425,
+        "f1_weighted": 0.3264780570664205,
+        "classification_report": {
+          "defensive": {
+            "precision": 0.257298277425204,
+            "recall": 0.3753968253968254,
+            "f1-score": 0.30532544378698223,
+            "support": 3780.0
+          },
+          "dynamic": {
+            "precision": 0.26959332076488013,
+            "recall": 0.23519736842105263,
+            "f1-score": 0.25122349102773245,
+            "support": 4256.0
+          },
+          "positional": {
+            "precision": 0.4578452083733436,
+            "recall": 0.33782060365594446,
+            "f1-score": 0.3887801696020874,
+            "support": 7057.0
+          },
+          "tactical": {
+            "precision": 0.2993838347227256,
+            "recall": 0.339917695473251,
+            "f1-score": 0.31836577375216807,
+            "support": 4860.0
+          },
+          "accuracy": 0.32356036686212597,
+          "macro avg": {
+            "precision": 0.3210301603215383,
+            "recall": 0.32208312323676835,
+            "f1-score": 0.3159237195422425,
+            "support": 19953.0
+          },
+          "weighted avg": {
+            "precision": 0.3411013749353848,
+            "recall": 0.32356036686212597,
+            "f1-score": 0.3264780570664205,
+            "support": 19953.0
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "defensive",
+            "dynamic",
+            "positional",
+            "tactical"
+          ],
+          "matrix": [
+            [
+              1419,
+              662,
+              751,
+              948
+            ],
+            [
+              1018,
+              1001,
+              1007,
+              1230
+            ],
+            [
+              1852,
+              1133,
+              2384,
+              1688
+            ],
+            [
+              1226,
+              917,
+              1065,
+              1652
+            ]
+          ]
+        }
+      },
+      "n_test_games": 1996,
+      "elapsed_seconds": 70.89
     },
     {
       "config": {
@@ -889,129 +896,51 @@
         "weight_decay": 1e-05,
         "dropout": 0.2,
         "num_layers": 3,
-        "batch_size": 32
+        "batch_size": 256
       },
-      "epochs_trained": 39,
-      "best_val_f1_macro": 0.24777640471130502,
-      "val_metrics": {
-        "accuracy": 0.2571428571428571,
-        "f1_macro": 0.24777640471130502,
-        "f1_weighted": 0.24777640471130502,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.23295454545454544,
-            "recall": 0.19523809523809524,
-            "f1-score": 0.21243523316062177,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.2361111111111111,
-            "recall": 0.1619047619047619,
-            "f1-score": 0.192090395480226,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.36585365853658536,
-            "recall": 0.21428571428571427,
-            "f1-score": 0.2702702702702703,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.24181360201511334,
-            "recall": 0.45714285714285713,
-            "f1-score": 0.3163097199341021,
-            "support": 210.0
-          },
-          "accuracy": 0.2571428571428571,
-          "macro avg": {
-            "precision": 0.2691832292793388,
-            "recall": 0.2571428571428571,
-            "f1-score": 0.24777640471130502,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.2691832292793388,
-            "recall": 0.2571428571428571,
-            "f1-score": 0.24777640471130502,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              41,
-              29,
-              27,
-              113
-            ],
-            [
-              46,
-              34,
-              28,
-              102
-            ],
-            [
-              35,
-              44,
-              45,
-              86
-            ],
-            [
-              54,
-              37,
-              23,
-              96
-            ]
-          ]
-        }
-      },
+      "epochs_trained": 32,
+      "best_val_f1_macro": 0.38922139688960794,
       "test_metrics": {
-        "accuracy": 0.3130952380952381,
-        "f1_macro": 0.3037306619455764,
-        "f1_weighted": 0.30373066194557635,
+        "accuracy": 0.4243486973947896,
+        "f1_macro": 0.3927090507423272,
+        "f1_weighted": 0.41468910401571,
         "classification_report": {
           "defensive": {
-            "precision": 0.2974683544303797,
-            "recall": 0.22380952380952382,
-            "f1-score": 0.2554347826086957,
-            "support": 210.0
+            "precision": 0.3611738148984199,
+            "recall": 0.42328042328042326,
+            "f1-score": 0.38976857490864797,
+            "support": 378.0
           },
           "dynamic": {
-            "precision": 0.2671232876712329,
-            "recall": 0.18571428571428572,
-            "f1-score": 0.21910112359550563,
-            "support": 210.0
+            "precision": 0.2981132075471698,
+            "recall": 0.18544600938967137,
+            "f1-score": 0.22865412445730826,
+            "support": 426.0
           },
           "positional": {
-            "precision": 0.3945945945945946,
-            "recall": 0.3476190476190476,
-            "f1-score": 0.369620253164557,
-            "support": 210.0
+            "precision": 0.5184713375796178,
+            "recall": 0.5764872521246459,
+            "f1-score": 0.5459423205902079,
+            "support": 706.0
           },
           "tactical": {
-            "precision": 0.2962962962962963,
-            "recall": 0.49523809523809526,
-            "f1-score": 0.37076648841354726,
-            "support": 210.0
+            "precision": 0.3996023856858847,
+            "recall": 0.41358024691358025,
+            "f1-score": 0.4064711830131446,
+            "support": 486.0
           },
-          "accuracy": 0.3130952380952381,
+          "accuracy": 0.4243486973947896,
           "macro avg": {
-            "precision": 0.31387063324812586,
-            "recall": 0.3130952380952381,
-            "f1-score": 0.3037306619455764,
-            "support": 840.0
+            "precision": 0.394340186427773,
+            "recall": 0.3996984829270802,
+            "f1-score": 0.3927090507423272,
+            "support": 1996.0
           },
           "weighted avg": {
-            "precision": 0.31387063324812586,
-            "recall": 0.3130952380952381,
-            "f1-score": 0.30373066194557635,
-            "support": 840.0
+            "precision": 0.4127091443994224,
+            "recall": 0.4243486973947896,
+            "f1-score": 0.41468910401571,
+            "support": 1996.0
           }
         },
         "confusion_matrix": {
@@ -1023,671 +952,73 @@
           ],
           "matrix": [
             [
-              47,
-              28,
-              48,
-              87
+              160,
+              36,
+              110,
+              72
             ],
             [
-              44,
-              39,
-              37,
-              90
-            ],
-            [
-              32,
-              35,
-              73,
-              70
-            ],
-            [
-              35,
-              44,
-              27,
-              104
-            ]
-          ]
-        }
-      },
-      "elapsed_seconds": 185.17
-    },
-    {
-      "config": {
-        "hidden_dim": 64,
-        "lr": 0.0005,
-        "weight_decay": 1e-05,
-        "dropout": 0.3,
-        "num_layers": 3,
-        "batch_size": 64
-      },
-      "epochs_trained": 31,
-      "best_val_f1_macro": 0.20386086328880182,
-      "val_metrics": {
-        "accuracy": 0.2619047619047619,
-        "f1_macro": 0.20386086328880182,
-        "f1_weighted": 0.20386086328880185,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.20430107526881722,
-            "recall": 0.09047619047619047,
-            "f1-score": 0.1254125412541254,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.29354838709677417,
-            "recall": 0.43333333333333335,
-            "f1-score": 0.35,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.2517162471395881,
-            "recall": 0.5238095238095238,
-            "f1-score": 0.3400309119010819,
-            "support": 210.0
-          },
-          "accuracy": 0.2619047619047619,
-          "macro avg": {
-            "precision": 0.18739142737629488,
-            "recall": 0.2619047619047619,
-            "f1-score": 0.20386086328880182,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.18739142737629486,
-            "recall": 0.2619047619047619,
-            "f1-score": 0.20386086328880185,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              0,
-              29,
-              63,
-              118
-            ],
-            [
-              0,
-              19,
+              87,
               79,
-              112
+              138,
+              122
             ],
             [
-              0,
-              22,
-              91,
-              97
-            ],
-            [
-              0,
-              23,
-              77,
-              110
-            ]
-          ]
-        }
-      },
-      "test_metrics": {
-        "accuracy": 0.3011904761904762,
-        "f1_macro": 0.2359248971223245,
-        "f1_weighted": 0.23592489712232453,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.26373626373626374,
-            "recall": 0.11428571428571428,
-            "f1-score": 0.15946843853820597,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.32132963988919666,
-            "recall": 0.5523809523809524,
-            "f1-score": 0.4063047285464098,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.2912371134020619,
-            "recall": 0.5380952380952381,
-            "f1-score": 0.3779264214046823,
-            "support": 210.0
-          },
-          "accuracy": 0.3011904761904762,
-          "macro avg": {
-            "precision": 0.21907575425688058,
-            "recall": 0.30119047619047623,
-            "f1-score": 0.2359248971223245,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.21907575425688058,
-            "recall": 0.3011904761904762,
-            "f1-score": 0.23592489712232453,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              0,
-              17,
-              85,
+              113,
+              78,
+              407,
               108
             ],
             [
-              0,
-              24,
-              87,
-              99
-            ],
-            [
-              0,
-              26,
-              116,
-              68
-            ],
-            [
-              0,
-              24,
-              73,
-              113
-            ]
-          ]
-        }
-      },
-      "elapsed_seconds": 161.52
-    },
-    {
-      "config": {
-        "hidden_dim": 64,
-        "lr": 0.001,
-        "weight_decay": 0.0001,
-        "dropout": 0.5,
-        "num_layers": 2,
-        "batch_size": 64
-      },
-      "epochs_trained": 40,
-      "best_val_f1_macro": 0.24034688107592256,
-      "val_metrics": {
-        "accuracy": 0.2845238095238095,
-        "f1_macro": 0.24034688107592256,
-        "f1_weighted": 0.24034688107592259,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.28618421052631576,
-            "recall": 0.4142857142857143,
-            "f1-score": 0.33852140077821014,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.2784090909090909,
-            "recall": 0.4666666666666667,
-            "f1-score": 0.3487544483985765,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.29347826086956524,
-            "recall": 0.2571428571428571,
-            "f1-score": 0.27411167512690354,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "accuracy": 0.2845238095238095,
-          "macro avg": {
-            "precision": 0.214517890576243,
-            "recall": 0.2845238095238095,
-            "f1-score": 0.24034688107592256,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.214517890576243,
-            "recall": 0.2845238095238095,
-            "f1-score": 0.24034688107592259,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              87,
-              93,
-              30,
-              0
-            ],
-            [
-              69,
-              98,
-              43,
-              0
-            ],
-            [
-              80,
-              76,
-              54,
-              0
-            ],
-            [
-              68,
-              85,
-              57,
-              0
-            ]
-          ]
-        }
-      },
-      "test_metrics": {
-        "accuracy": 0.28809523809523807,
-        "f1_macro": 0.2467069695559772,
-        "f1_weighted": 0.2467069695559772,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.28289473684210525,
-            "recall": 0.4095238095238095,
-            "f1-score": 0.3346303501945525,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.2747603833865815,
-            "recall": 0.4095238095238095,
-            "f1-score": 0.32887189292543023,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.31390134529147984,
-            "recall": 0.3333333333333333,
-            "f1-score": 0.3233256351039261,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "accuracy": 0.28809523809523807,
-          "macro avg": {
-            "precision": 0.21788911638004166,
-            "recall": 0.28809523809523807,
-            "f1-score": 0.2467069695559772,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.21788911638004166,
-            "recall": 0.28809523809523807,
-            "f1-score": 0.2467069695559772,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              86,
-              80,
-              44,
-              0
-            ],
-            [
-              68,
-              86,
-              56,
-              0
-            ],
-            [
-              89,
-              51,
-              70,
-              0
-            ],
-            [
-              61,
-              96,
-              53,
-              0
-            ]
-          ]
-        }
-      },
-      "elapsed_seconds": 81.6
-    },
-    {
-      "config": {
-        "hidden_dim": 64,
-        "lr": 0.001,
-        "weight_decay": 0.0001,
-        "dropout": 0.5,
-        "num_layers": 3,
-        "batch_size": 32
-      },
-      "epochs_trained": 25,
-      "best_val_f1_macro": 0.1846817084826461,
-      "val_metrics": {
-        "accuracy": 0.2773809523809524,
-        "f1_macro": 0.1846817084826461,
-        "f1_weighted": 0.1846817084826461,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.26932668329177056,
-            "recall": 0.5142857142857142,
-            "f1-score": 0.353518821603928,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.2847380410022779,
-            "recall": 0.5952380952380952,
-            "f1-score": 0.3852080123266564,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "accuracy": 0.2773809523809524,
-          "macro avg": {
-            "precision": 0.1385161810735121,
-            "recall": 0.2773809523809524,
-            "f1-score": 0.1846817084826461,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.1385161810735121,
-            "recall": 0.2773809523809524,
-            "f1-score": 0.1846817084826461,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              0,
-              107,
-              103,
-              0
-            ],
-            [
-              0,
-              108,
-              102,
-              0
-            ],
-            [
-              0,
-              85,
-              125,
-              0
-            ],
-            [
-              0,
-              101,
-              109,
-              0
-            ]
-          ]
-        }
-      },
-      "test_metrics": {
-        "accuracy": 0.28809523809523807,
-        "f1_macro": 0.19035554236759414,
-        "f1_weighted": 0.19035554236759417,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.26558265582655827,
-            "recall": 0.4666666666666667,
-            "f1-score": 0.3385146804835924,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.3057324840764331,
-            "recall": 0.6857142857142857,
-            "f1-score": 0.42290748898678415,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "accuracy": 0.28809523809523807,
-          "macro avg": {
-            "precision": 0.14282878497574786,
-            "recall": 0.28809523809523807,
-            "f1-score": 0.19035554236759414,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.14282878497574783,
-            "recall": 0.28809523809523807,
-            "f1-score": 0.19035554236759417,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              0,
-              97,
-              113,
-              0
-            ],
-            [
-              0,
-              98,
-              112,
-              0
-            ],
-            [
-              0,
-              66,
-              144,
-              0
-            ],
-            [
-              0,
-              108,
-              102,
-              0
-            ]
-          ]
-        }
-      },
-      "elapsed_seconds": 69.39
-    },
-    {
-      "config": {
-        "hidden_dim": 256,
-        "lr": 0.0001,
-        "weight_decay": 1e-05,
-        "dropout": 0.5,
-        "num_layers": 2,
-        "batch_size": 64
-      },
-      "epochs_trained": 27,
-      "best_val_f1_macro": 0.21556289704991327,
-      "val_metrics": {
-        "accuracy": 0.2642857142857143,
-        "f1_macro": 0.21556289704991327,
-        "f1_weighted": 0.21556289704991327,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.2584745762711864,
-            "recall": 0.580952380952381,
-            "f1-score": 0.35777126099706746,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.3015075376884422,
-            "recall": 0.2857142857142857,
-            "f1-score": 0.293398533007335,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.23668639053254437,
-            "recall": 0.19047619047619047,
-            "f1-score": 0.21108179419525067,
-            "support": 210.0
-          },
-          "accuracy": 0.2642857142857143,
-          "macro avg": {
-            "precision": 0.19916712612304324,
-            "recall": 0.2642857142857143,
-            "f1-score": 0.21556289704991327,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.19916712612304324,
-            "recall": 0.2642857142857143,
-            "f1-score": 0.21556289704991327,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              0,
+              83,
+              72,
               130,
-              37,
-              43
-            ],
-            [
-              0,
-              122,
-              46,
-              42
-            ],
-            [
-              0,
-              106,
-              60,
-              44
-            ],
-            [
-              0,
-              114,
-              56,
-              40
+              201
             ]
           ]
         }
       },
-      "test_metrics": {
-        "accuracy": 0.2857142857142857,
-        "f1_macro": 0.23648103573134235,
-        "f1_weighted": 0.23648103573134235,
+      "snapshot_test_metrics": {
+        "accuracy": 0.35112514408860823,
+        "f1_macro": 0.3297473164139346,
+        "f1_weighted": 0.34719258168258643,
         "classification_report": {
           "defensive": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
+            "precision": 0.27517950708325245,
+            "recall": 0.37513227513227515,
+            "f1-score": 0.31747453263181463,
+            "support": 3780.0
           },
           "dynamic": {
-            "precision": 0.26410835214446954,
-            "recall": 0.5571428571428572,
-            "f1-score": 0.35834609494640124,
-            "support": 210.0
+            "precision": 0.276355421686747,
+            "recall": 0.1724624060150376,
+            "f1-score": 0.21238425925925927,
+            "support": 4256.0
           },
           "positional": {
-            "precision": 0.3253012048192771,
-            "recall": 0.38571428571428573,
-            "f1-score": 0.35294117647058826,
-            "support": 210.0
+            "precision": 0.45463753436550425,
+            "recall": 0.4452316848519201,
+            "f1-score": 0.44988545246277206,
+            "support": 7057.0
           },
           "tactical": {
-            "precision": 0.28378378378378377,
-            "recall": 0.2,
-            "f1-score": 0.2346368715083799,
-            "support": 210.0
+            "precision": 0.32715459583412954,
+            "recall": 0.3522633744855967,
+            "f1-score": 0.3392450213018924,
+            "support": 4860.0
           },
-          "accuracy": 0.2857142857142857,
+          "accuracy": 0.35112514408860823,
           "macro avg": {
-            "precision": 0.2182983351868826,
-            "recall": 0.2857142857142857,
-            "f1-score": 0.23648103573134235,
-            "support": 840.0
+            "precision": 0.3333317647424083,
+            "recall": 0.33627243512120736,
+            "f1-score": 0.3297473164139346,
+            "support": 19953.0
           },
           "weighted avg": {
-            "precision": 0.21829833518688257,
-            "recall": 0.2857142857142857,
-            "f1-score": 0.23648103573134235,
-            "support": 840.0
+            "precision": 0.3515609495937815,
+            "recall": 0.35112514408860823,
+            "f1-score": 0.34719258168258643,
+            "support": 19953.0
           }
         },
         "confusion_matrix": {
@@ -1699,333 +1030,87 @@
           ],
           "matrix": [
             [
-              0,
-              117,
-              55,
-              38
+              1418,
+              433,
+              1088,
+              841
             ],
             [
-              0,
-              117,
-              57,
-              36
+              1013,
+              734,
+              1307,
+              1202
             ],
             [
-              0,
-              97,
-              81,
-              32
+              1610,
+              827,
+              3142,
+              1478
             ],
             [
-              0,
-              112,
-              56,
-              42
+              1112,
+              662,
+              1374,
+              1712
             ]
           ]
         }
       },
-      "elapsed_seconds": 76.53
+      "n_test_games": 1996,
+      "elapsed_seconds": 198.96
     },
     {
       "config": {
         "hidden_dim": 64,
-        "lr": 0.0001,
-        "weight_decay": 1e-05,
-        "dropout": 0.3,
-        "num_layers": 3,
-        "batch_size": 64
-      },
-      "epochs_trained": 29,
-      "best_val_f1_macro": 0.1488502548664955,
-      "val_metrics": {
-        "accuracy": 0.25357142857142856,
-        "f1_macro": 0.1488502548664955,
-        "f1_weighted": 0.1488502548664955,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.2647058823529412,
-            "recall": 0.17142857142857143,
-            "f1-score": 0.20809248554913296,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.25142045454545453,
-            "recall": 0.8428571428571429,
-            "f1-score": 0.387308533916849,
-            "support": 210.0
-          },
-          "accuracy": 0.25357142857142856,
-          "macro avg": {
-            "precision": 0.12903158422459893,
-            "recall": 0.25357142857142856,
-            "f1-score": 0.1488502548664955,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.12903158422459893,
-            "recall": 0.25357142857142856,
-            "f1-score": 0.1488502548664955,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              0,
-              37,
-              0,
-              173
-            ],
-            [
-              0,
-              36,
-              0,
-              174
-            ],
-            [
-              0,
-              30,
-              0,
-              180
-            ],
-            [
-              0,
-              33,
-              0,
-              177
-            ]
-          ]
-        }
-      },
-      "test_metrics": {
-        "accuracy": 0.24761904761904763,
-        "f1_macro": 0.14138176638176636,
-        "f1_weighted": 0.14138176638176636,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.2631578947368421,
-            "recall": 0.14285714285714285,
-            "f1-score": 0.18518518518518517,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.24517906336088155,
-            "recall": 0.8476190476190476,
-            "f1-score": 0.3803418803418803,
-            "support": 210.0
-          },
-          "accuracy": 0.24761904761904763,
-          "macro avg": {
-            "precision": 0.1270842395244309,
-            "recall": 0.24761904761904763,
-            "f1-score": 0.14138176638176636,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.1270842395244309,
-            "recall": 0.24761904761904763,
-            "f1-score": 0.14138176638176636,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              0,
-              29,
-              0,
-              181
-            ],
-            [
-              0,
-              30,
-              0,
-              180
-            ],
-            [
-              0,
-              23,
-              0,
-              187
-            ],
-            [
-              0,
-              32,
-              0,
-              178
-            ]
-          ]
-        }
-      },
-      "elapsed_seconds": 53.53
-    },
-    {
-      "config": {
-        "hidden_dim": 256,
         "lr": 0.0005,
         "weight_decay": 1e-05,
         "dropout": 0.3,
         "num_layers": 3,
-        "batch_size": 32
+        "batch_size": 512
       },
-      "epochs_trained": 30,
-      "best_val_f1_macro": 0.2512117400663708,
-      "val_metrics": {
-        "accuracy": 0.2630952380952381,
-        "f1_macro": 0.2512117400663708,
-        "f1_weighted": 0.25121174006637076,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.3333333333333333,
-            "recall": 0.11428571428571428,
-            "f1-score": 0.1702127659574468,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.2548262548262548,
-            "recall": 0.3142857142857143,
-            "f1-score": 0.2814498933901919,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.27450980392156865,
-            "recall": 0.4,
-            "f1-score": 0.32558139534883723,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.2315270935960591,
-            "recall": 0.22380952380952382,
-            "f1-score": 0.22760290556900725,
-            "support": 210.0
-          },
-          "accuracy": 0.2630952380952381,
-          "macro avg": {
-            "precision": 0.273549121419304,
-            "recall": 0.2630952380952381,
-            "f1-score": 0.2512117400663708,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.273549121419304,
-            "recall": 0.2630952380952381,
-            "f1-score": 0.25121174006637076,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              24,
-              66,
-              59,
-              61
-            ],
-            [
-              19,
-              66,
-              69,
-              56
-            ],
-            [
-              20,
-              67,
-              84,
-              39
-            ],
-            [
-              9,
-              60,
-              94,
-              47
-            ]
-          ]
-        }
-      },
+      "epochs_trained": 31,
+      "best_val_f1_macro": 0.3760568189863574,
       "test_metrics": {
-        "accuracy": 0.29523809523809524,
-        "f1_macro": 0.2863360686869817,
-        "f1_weighted": 0.2863360686869817,
+        "accuracy": 0.39028056112224446,
+        "f1_macro": 0.36950664332887945,
+        "f1_weighted": 0.38832026891804133,
         "classification_report": {
           "defensive": {
-            "precision": 0.3695652173913043,
-            "recall": 0.1619047619047619,
-            "f1-score": 0.2251655629139073,
-            "support": 210.0
+            "precision": 0.32113821138211385,
+            "recall": 0.41798941798941797,
+            "f1-score": 0.3632183908045977,
+            "support": 378.0
           },
           "dynamic": {
-            "precision": 0.27459016393442626,
-            "recall": 0.319047619047619,
-            "f1-score": 0.29515418502202645,
-            "support": 210.0
+            "precision": 0.2804878048780488,
+            "recall": 0.215962441314554,
+            "f1-score": 0.2440318302387268,
+            "support": 426.0
           },
           "positional": {
-            "precision": 0.29153605015673983,
-            "recall": 0.44285714285714284,
-            "f1-score": 0.3516068052930057,
-            "support": 210.0
+            "precision": 0.5132743362831859,
+            "recall": 0.49291784702549574,
+            "f1-score": 0.5028901734104047,
+            "support": 706.0
           },
           "tactical": {
-            "precision": 0.2918918918918919,
-            "recall": 0.2571428571428571,
-            "f1-score": 0.27341772151898736,
-            "support": 210.0
+            "precision": 0.3634538152610442,
+            "recall": 0.3724279835390947,
+            "f1-score": 0.3678861788617886,
+            "support": 486.0
           },
-          "accuracy": 0.29523809523809524,
+          "accuracy": 0.39028056112224446,
           "macro avg": {
-            "precision": 0.3068958308435906,
-            "recall": 0.2952380952380952,
-            "f1-score": 0.2863360686869817,
-            "support": 840.0
+            "precision": 0.3695885419510982,
+            "recall": 0.3748244224671406,
+            "f1-score": 0.36950664332887945,
+            "support": 1996.0
           },
           "weighted avg": {
-            "precision": 0.30689583084359057,
-            "recall": 0.29523809523809524,
-            "f1-score": 0.2863360686869817,
-            "support": 840.0
+            "precision": 0.3907255933934291,
+            "recall": 0.39028056112224446,
+            "f1-score": 0.38832026891804133,
+            "support": 1996.0
           }
         },
         "confusion_matrix": {
@@ -2037,164 +1122,73 @@
           ],
           "matrix": [
             [
-              34,
+              158,
               51,
-              78,
-              47
+              96,
+              73
             ],
             [
-              22,
-              67,
-              70,
-              51
-            ],
-            [
-              27,
-              57,
-              93,
-              33
-            ],
-            [
-              9,
-              69,
-              78,
-              54
-            ]
-          ]
-        }
-      },
-      "elapsed_seconds": 276.23
-    },
-    {
-      "config": {
-        "hidden_dim": 256,
-        "lr": 0.0005,
-        "weight_decay": 0.001,
-        "dropout": 0.5,
-        "num_layers": 2,
-        "batch_size": 32
-      },
-      "epochs_trained": 19,
-      "best_val_f1_macro": 0.17837024087024086,
-      "val_metrics": {
-        "accuracy": 0.2761904761904762,
-        "f1_macro": 0.17837024087024086,
-        "f1_weighted": 0.17837024087024084,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.27319587628865977,
-            "recall": 0.7571428571428571,
-            "f1-score": 0.4015151515151515,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.28294573643410853,
-            "recall": 0.3476190476190476,
-            "f1-score": 0.31196581196581197,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "accuracy": 0.2761904761904762,
-          "macro avg": {
-            "precision": 0.13903540318069207,
-            "recall": 0.2761904761904762,
-            "f1-score": 0.17837024087024086,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.13903540318069207,
-            "recall": 0.2761904761904762,
-            "f1-score": 0.17837024087024084,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              159,
-              0,
-              51,
-              0
-            ],
-            [
-              146,
-              0,
-              64,
-              0
-            ],
-            [
-              137,
-              0,
-              73,
-              0
+              95,
+              92,
+              126,
+              113
             ],
             [
               140,
-              0,
-              70,
-              0
+              87,
+              348,
+              131
+            ],
+            [
+              99,
+              98,
+              108,
+              181
             ]
           ]
         }
       },
-      "test_metrics": {
-        "accuracy": 0.27380952380952384,
-        "f1_macro": 0.18218617154288572,
-        "f1_weighted": 0.18218617154288572,
+      "snapshot_test_metrics": {
+        "accuracy": 0.3312283867087656,
+        "f1_macro": 0.31480749505009686,
+        "f1_weighted": 0.33090822389578217,
         "classification_report": {
           "defensive": {
-            "precision": 0.2565543071161049,
-            "recall": 0.6523809523809524,
-            "f1-score": 0.3682795698924731,
-            "support": 210.0
+            "precision": 0.26081825334382375,
+            "recall": 0.35079365079365077,
+            "f1-score": 0.29918772563176893,
+            "support": 3780.0
           },
           "dynamic": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
+            "precision": 0.25763779527559055,
+            "recall": 0.19219924812030076,
+            "f1-score": 0.2201587942403445,
+            "support": 4256.0
           },
           "positional": {
-            "precision": 0.30392156862745096,
-            "recall": 0.44285714285714284,
-            "f1-score": 0.36046511627906974,
-            "support": 210.0
+            "precision": 0.4474418604651163,
+            "recall": 0.40895564687544284,
+            "f1-score": 0.4273339749759384,
+            "support": 7057.0
           },
           "tactical": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
+            "precision": 0.3011060259344012,
+            "recall": 0.3248971193415638,
+            "f1-score": 0.31254948535233573,
+            "support": 4860.0
           },
-          "accuracy": 0.27380952380952384,
+          "accuracy": 0.3312283867087656,
           "macro avg": {
-            "precision": 0.14011896893588896,
-            "recall": 0.27380952380952384,
-            "f1-score": 0.18218617154288572,
-            "support": 840.0
+            "precision": 0.31675098375473293,
+            "recall": 0.3192114162827395,
+            "f1-score": 0.31480749505009686,
+            "support": 19953.0
           },
           "weighted avg": {
-            "precision": 0.14011896893588896,
-            "recall": 0.27380952380952384,
-            "f1-score": 0.18218617154288572,
-            "support": 840.0
+            "precision": 0.3359580990164929,
+            "recall": 0.3312283867087656,
+            "f1-score": 0.33090822389578217,
+            "support": 19953.0
           }
         },
         "confusion_matrix": {
@@ -2206,333 +1200,427 @@
           ],
           "matrix": [
             [
-              137,
-              0,
-              73,
-              0
+              1326,
+              565,
+              979,
+              910
             ],
             [
-              133,
-              0,
-              77,
-              0
+              1003,
+              818,
+              1264,
+              1171
             ],
             [
-              117,
-              0,
-              93,
-              0
+              1617,
+              970,
+              2886,
+              1584
             ],
             [
-              147,
-              0,
-              63,
-              0
+              1138,
+              822,
+              1321,
+              1579
             ]
           ]
         }
       },
-      "elapsed_seconds": 69.69
+      "n_test_games": 1996,
+      "elapsed_seconds": 139.83
+    },
+    {
+      "config": {
+        "hidden_dim": 64,
+        "lr": 0.001,
+        "weight_decay": 0.0001,
+        "dropout": 0.5,
+        "num_layers": 2,
+        "batch_size": 512
+      },
+      "epochs_trained": 32,
+      "best_val_f1_macro": 0.3566179276866633,
+      "test_metrics": {
+        "accuracy": 0.37324649298597196,
+        "f1_macro": 0.35480726539457363,
+        "f1_weighted": 0.36944815364862715,
+        "classification_report": {
+          "defensive": {
+            "precision": 0.34594594594594597,
+            "recall": 0.3386243386243386,
+            "f1-score": 0.3422459893048128,
+            "support": 378.0
+          },
+          "dynamic": {
+            "precision": 0.2523076923076923,
+            "recall": 0.19248826291079812,
+            "f1-score": 0.21837549933422104,
+            "support": 426.0
+          },
+          "positional": {
+            "precision": 0.5169172932330827,
+            "recall": 0.3895184135977337,
+            "f1-score": 0.44426494345718903,
+            "support": 706.0
+          },
+          "tactical": {
+            "precision": 0.3381014304291287,
+            "recall": 0.5349794238683128,
+            "f1-score": 0.41434262948207173,
+            "support": 486.0
+          },
+          "accuracy": 0.37324649298597196,
+          "macro avg": {
+            "precision": 0.36331809047896246,
+            "recall": 0.3639026097502958,
+            "f1-score": 0.35480726539457363,
+            "support": 1996.0
+          },
+          "weighted avg": {
+            "precision": 0.38452482399887644,
+            "recall": 0.37324649298597196,
+            "f1-score": 0.36944815364862715,
+            "support": 1996.0
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "defensive",
+            "dynamic",
+            "positional",
+            "tactical"
+          ],
+          "matrix": [
+            [
+              128,
+              55,
+              77,
+              118
+            ],
+            [
+              56,
+              82,
+              107,
+              181
+            ],
+            [
+              109,
+              112,
+              275,
+              210
+            ],
+            [
+              77,
+              76,
+              73,
+              260
+            ]
+          ]
+        }
+      },
+      "snapshot_test_metrics": {
+        "accuracy": 0.32731920012028265,
+        "f1_macro": 0.31447672401767174,
+        "f1_weighted": 0.3257207052787604,
+        "classification_report": {
+          "defensive": {
+            "precision": 0.2631062242293344,
+            "recall": 0.3544973544973545,
+            "f1-score": 0.30203989631466244,
+            "support": 3780.0
+          },
+          "dynamic": {
+            "precision": 0.2633898305084746,
+            "recall": 0.1825657894736842,
+            "f1-score": 0.21565362198168192,
+            "support": 4256.0
+          },
+          "positional": {
+            "precision": 0.45100671140939597,
+            "recall": 0.3332860989088848,
+            "f1-score": 0.3833116036505867,
+            "support": 7057.0
+          },
+          "tactical": {
+            "precision": 0.30799103808812545,
+            "recall": 0.4242798353909465,
+            "f1-score": 0.35690177412375595,
+            "support": 4860.0
+          },
+          "accuracy": 0.32731920012028265,
+          "macro avg": {
+            "precision": 0.32137345105883264,
+            "recall": 0.3236572695677175,
+            "f1-score": 0.31447672401767174,
+            "support": 19953.0
+          },
+          "weighted avg": {
+            "precision": 0.3405562799456397,
+            "recall": 0.32731920012028265,
+            "f1-score": 0.3257207052787604,
+            "support": 19953.0
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "defensive",
+            "dynamic",
+            "positional",
+            "tactical"
+          ],
+          "matrix": [
+            [
+              1340,
+              580,
+              780,
+              1080
+            ],
+            [
+              920,
+              777,
+              1021,
+              1538
+            ],
+            [
+              1755,
+              935,
+              2352,
+              2015
+            ],
+            [
+              1078,
+              658,
+              1062,
+              2062
+            ]
+          ]
+        }
+      },
+      "n_test_games": 1996,
+      "elapsed_seconds": 167.83
+    },
+    {
+      "config": {
+        "hidden_dim": 64,
+        "lr": 0.001,
+        "weight_decay": 0.0001,
+        "dropout": 0.5,
+        "num_layers": 3,
+        "batch_size": 256
+      },
+      "epochs_trained": 34,
+      "best_val_f1_macro": 0.36933251742812456,
+      "test_metrics": {
+        "accuracy": 0.3937875751503006,
+        "f1_macro": 0.3679178783387223,
+        "f1_weighted": 0.3883225694528055,
+        "classification_report": {
+          "defensive": {
+            "precision": 0.35135135135135137,
+            "recall": 0.3783068783068783,
+            "f1-score": 0.3643312101910828,
+            "support": 378.0
+          },
+          "dynamic": {
+            "precision": 0.28651685393258425,
+            "recall": 0.23943661971830985,
+            "f1-score": 0.2608695652173913,
+            "support": 426.0
+          },
+          "positional": {
+            "precision": 0.4949238578680203,
+            "recall": 0.5524079320113314,
+            "f1-score": 0.5220883534136547,
+            "support": 706.0
+          },
+          "tactical": {
+            "precision": 0.3393258426966292,
+            "recall": 0.31069958847736623,
+            "f1-score": 0.32438238453276047,
+            "support": 486.0
+          },
+          "accuracy": 0.3937875751503006,
+          "macro avg": {
+            "precision": 0.3680294764621463,
+            "recall": 0.3702127546284714,
+            "f1-score": 0.3679178783387223,
+            "support": 1996.0
+          },
+          "weighted avg": {
+            "precision": 0.3853685339636652,
+            "recall": 0.3937875751503006,
+            "f1-score": 0.3883225694528055,
+            "support": 1996.0
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "defensive",
+            "dynamic",
+            "positional",
+            "tactical"
+          ],
+          "matrix": [
+            [
+              143,
+              53,
+              113,
+              69
+            ],
+            [
+              64,
+              102,
+              146,
+              114
+            ],
+            [
+              110,
+              95,
+              390,
+              111
+            ],
+            [
+              90,
+              106,
+              139,
+              151
+            ]
+          ]
+        }
+      },
+      "snapshot_test_metrics": {
+        "accuracy": 0.3307773267177868,
+        "f1_macro": 0.309707665462721,
+        "f1_weighted": 0.3278121705005567,
+        "classification_report": {
+          "defensive": {
+            "precision": 0.2573303260200943,
+            "recall": 0.33201058201058203,
+            "f1-score": 0.28993877786762157,
+            "support": 3780.0
+          },
+          "dynamic": {
+            "precision": 0.24640729057132843,
+            "recall": 0.16517857142857142,
+            "f1-score": 0.1977774651849768,
+            "support": 4256.0
+          },
+          "positional": {
+            "precision": 0.43889695210449925,
+            "recall": 0.4285106985971376,
+            "f1-score": 0.43364164336416433,
+            "support": 7057.0
+          },
+          "tactical": {
+            "precision": 0.30339396212263264,
+            "recall": 0.3329218106995885,
+            "f1-score": 0.31747277543412145,
+            "support": 4860.0
+          },
+          "accuracy": 0.3307773267177868,
+          "macro avg": {
+            "precision": 0.31150713270463865,
+            "recall": 0.31465541568396993,
+            "f1-score": 0.309707665462721,
+            "support": 19953.0
+          },
+          "weighted avg": {
+            "precision": 0.330436952235001,
+            "recall": 0.3307773267177868,
+            "f1-score": 0.3278121705005567,
+            "support": 19953.0
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "defensive",
+            "dynamic",
+            "positional",
+            "tactical"
+          ],
+          "matrix": [
+            [
+              1255,
+              523,
+              1094,
+              908
+            ],
+            [
+              905,
+              703,
+              1359,
+              1289
+            ],
+            [
+              1605,
+              910,
+              3024,
+              1518
+            ],
+            [
+              1112,
+              717,
+              1413,
+              1618
+            ]
+          ]
+        }
+      },
+      "n_test_games": 1996,
+      "elapsed_seconds": 196.23
     },
     {
       "config": {
         "hidden_dim": 256,
-        "lr": 0.001,
+        "lr": 0.0001,
         "weight_decay": 1e-05,
-        "dropout": 0.2,
-        "num_layers": 3,
-        "batch_size": 64
-      },
-      "epochs_trained": 38,
-      "best_val_f1_macro": 0.275770342676904,
-      "val_metrics": {
-        "accuracy": 0.29285714285714287,
-        "f1_macro": 0.275770342676904,
-        "f1_weighted": 0.27577034267690403,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.3111111111111111,
-            "recall": 0.4666666666666667,
-            "f1-score": 0.37333333333333335,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.2702702702702703,
-            "recall": 0.09523809523809523,
-            "f1-score": 0.14084507042253522,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.26141078838174275,
-            "recall": 0.3,
-            "f1-score": 0.2793791574279379,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.30952380952380953,
-            "recall": 0.30952380952380953,
-            "f1-score": 0.30952380952380953,
-            "support": 210.0
-          },
-          "accuracy": 0.29285714285714287,
-          "macro avg": {
-            "precision": 0.28807899482173344,
-            "recall": 0.29285714285714287,
-            "f1-score": 0.275770342676904,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.2880789948217334,
-            "recall": 0.29285714285714287,
-            "f1-score": 0.27577034267690403,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              98,
-              14,
-              51,
-              47
-            ],
-            [
-              76,
-              20,
-              74,
-              40
-            ],
-            [
-              63,
-              26,
-              63,
-              58
-            ],
-            [
-              78,
-              14,
-              53,
-              65
-            ]
-          ]
-        }
-      },
-      "test_metrics": {
-        "accuracy": 0.27976190476190477,
-        "f1_macro": 0.26797318081844057,
-        "f1_weighted": 0.26797318081844057,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.28113879003558717,
-            "recall": 0.3761904761904762,
-            "f1-score": 0.32179226069246436,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.373134328358209,
-            "recall": 0.11904761904761904,
-            "f1-score": 0.18050541516245489,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.29739776951672864,
-            "recall": 0.38095238095238093,
-            "f1-score": 0.33402922755741127,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.22869955156950672,
-            "recall": 0.24285714285714285,
-            "f1-score": 0.23556581986143188,
-            "support": 210.0
-          },
-          "accuracy": 0.27976190476190477,
-          "macro avg": {
-            "precision": 0.2950926098700079,
-            "recall": 0.27976190476190477,
-            "f1-score": 0.26797318081844057,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.2950926098700079,
-            "recall": 0.27976190476190477,
-            "f1-score": 0.26797318081844057,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              79,
-              15,
-              62,
-              54
-            ],
-            [
-              59,
-              25,
-              73,
-              53
-            ],
-            [
-              56,
-              9,
-              80,
-              65
-            ],
-            [
-              87,
-              18,
-              54,
-              51
-            ]
-          ]
-        }
-      },
-      "elapsed_seconds": 182.65
-    },
-    {
-      "config": {
-        "hidden_dim": 128,
-        "lr": 0.001,
-        "weight_decay": 0.001,
         "dropout": 0.5,
         "num_layers": 2,
-        "batch_size": 64
+        "batch_size": 512
       },
-      "epochs_trained": 14,
-      "best_val_f1_macro": 0.147474970012974,
-      "val_metrics": {
-        "accuracy": 0.2369047619047619,
-        "f1_macro": 0.147474970012974,
-        "f1_weighted": 0.14747497001297397,
-        "classification_report": {
-          "defensive": {
-            "precision": 0.20080321285140562,
-            "recall": 0.23809523809523808,
-            "f1-score": 0.2178649237472767,
-            "support": 210.0
-          },
-          "dynamic": {
-            "precision": 0.2521150592216582,
-            "recall": 0.7095238095238096,
-            "f1-score": 0.37203495630461925,
-            "support": 210.0
-          },
-          "positional": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "tactical": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
-          },
-          "accuracy": 0.2369047619047619,
-          "macro avg": {
-            "precision": 0.11322956801826596,
-            "recall": 0.2369047619047619,
-            "f1-score": 0.147474970012974,
-            "support": 840.0
-          },
-          "weighted avg": {
-            "precision": 0.11322956801826595,
-            "recall": 0.2369047619047619,
-            "f1-score": 0.14747497001297397,
-            "support": 840.0
-          }
-        },
-        "confusion_matrix": {
-          "labels": [
-            "defensive",
-            "dynamic",
-            "positional",
-            "tactical"
-          ],
-          "matrix": [
-            [
-              50,
-              160,
-              0,
-              0
-            ],
-            [
-              61,
-              149,
-              0,
-              0
-            ],
-            [
-              71,
-              139,
-              0,
-              0
-            ],
-            [
-              67,
-              143,
-              0,
-              0
-            ]
-          ]
-        }
-      },
+      "epochs_trained": 49,
+      "best_val_f1_macro": 0.37230823338286007,
       "test_metrics": {
-        "accuracy": 0.24523809523809523,
-        "f1_macro": 0.15996188641313452,
-        "f1_weighted": 0.15996188641313452,
+        "accuracy": 0.38877755511022044,
+        "f1_macro": 0.3715398424174638,
+        "f1_weighted": 0.3893600507980811,
         "classification_report": {
           "defensive": {
-            "precision": 0.24161073825503357,
-            "recall": 0.34285714285714286,
-            "f1-score": 0.28346456692913385,
-            "support": 210.0
+            "precision": 0.3140794223826715,
+            "recall": 0.4603174603174603,
+            "f1-score": 0.37339055793991416,
+            "support": 378.0
           },
           "dynamic": {
-            "precision": 0.24723247232472326,
-            "recall": 0.638095238095238,
-            "f1-score": 0.35638297872340424,
-            "support": 210.0
+            "precision": 0.2684931506849315,
+            "recall": 0.2300469483568075,
+            "f1-score": 0.24778761061946902,
+            "support": 426.0
           },
           "positional": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
+            "precision": 0.5328,
+            "recall": 0.471671388101983,
+            "f1-score": 0.5003756574004508,
+            "support": 706.0
           },
           "tactical": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1-score": 0.0,
-            "support": 210.0
+            "precision": 0.37831858407079644,
+            "recall": 0.35185185185185186,
+            "f1-score": 0.3646055437100213,
+            "support": 486.0
           },
-          "accuracy": 0.24523809523809523,
+          "accuracy": 0.38877755511022044,
           "macro avg": {
-            "precision": 0.1222108026449392,
-            "recall": 0.24523809523809523,
-            "f1-score": 0.15996188641313452,
-            "support": 840.0
+            "precision": 0.3734227892845998,
+            "recall": 0.37847191215702564,
+            "f1-score": 0.3715398424174638,
+            "support": 1996.0
           },
           "weighted avg": {
-            "precision": 0.1222108026449392,
-            "recall": 0.24523809523809523,
-            "f1-score": 0.15996188641313452,
-            "support": 840.0
+            "precision": 0.39735457700943777,
+            "recall": 0.38877755511022044,
+            "f1-score": 0.3893600507980811,
+            "support": 1996.0
           }
         },
         "confusion_matrix": {
@@ -2544,93 +1632,171 @@
           ],
           "matrix": [
             [
-              72,
-              138,
-              0,
-              0
-            ],
-            [
-              76,
-              134,
-              0,
-              0
-            ],
-            [
+              174,
+              51,
               89,
-              121,
-              0,
-              0
+              64
             ],
             [
-              61,
-              149,
-              0,
-              0
+              104,
+              98,
+              116,
+              108
+            ],
+            [
+              159,
+              105,
+              333,
+              109
+            ],
+            [
+              117,
+              111,
+              87,
+              171
             ]
           ]
         }
       },
-      "elapsed_seconds": 25.98
+      "snapshot_test_metrics": {
+        "accuracy": 0.33087756227133763,
+        "f1_macro": 0.3198730154036908,
+        "f1_weighted": 0.33239910367501235,
+        "classification_report": {
+          "defensive": {
+            "precision": 0.25761772853185594,
+            "recall": 0.41825396825396827,
+            "f1-score": 0.318846425330241,
+            "support": 3780.0
+          },
+          "dynamic": {
+            "precision": 0.2641070389761489,
+            "recall": 0.21334586466165414,
+            "f1-score": 0.23602807382375876,
+            "support": 4256.0
+          },
+          "positional": {
+            "precision": 0.4614566719829878,
+            "recall": 0.3689953237919796,
+            "f1-score": 0.4100787401574803,
+            "support": 7057.0
+          },
+          "tactical": {
+            "precision": 0.31869060190073917,
+            "recall": 0.31049382716049384,
+            "f1-score": 0.31453882230328295,
+            "support": 4860.0
+          },
+          "accuracy": 0.33087756227133763,
+          "macro avg": {
+            "precision": 0.32546801034793293,
+            "recall": 0.3277722459670239,
+            "f1-score": 0.3198730154036908,
+            "support": 19953.0
+          },
+          "weighted avg": {
+            "precision": 0.345971564734849,
+            "recall": 0.33087756227133763,
+            "f1-score": 0.33239910367501235,
+            "support": 19953.0
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "defensive",
+            "dynamic",
+            "positional",
+            "tactical"
+          ],
+          "matrix": [
+            [
+              1581,
+              610,
+              841,
+              748
+            ],
+            [
+              1166,
+              908,
+              1093,
+              1089
+            ],
+            [
+              2016,
+              1048,
+              2604,
+              1389
+            ],
+            [
+              1374,
+              872,
+              1105,
+              1509
+            ]
+          ]
+        }
+      },
+      "n_test_games": 1996,
+      "elapsed_seconds": 218.6
     }
   ],
   "best_run": {
     "model": "gnn",
     "features": "graphs",
     "search_kind": "random",
-    "n_train": 2520,
-    "n_test": 840,
-    "search_space_size": 15,
-    "elapsed_seconds": 182.65,
+    "n_train": 5985,
+    "n_test": 1996,
+    "elapsed_seconds": 198.96,
     "best_params": {
-      "hidden_dim": 256,
-      "lr": 0.001,
+      "hidden_dim": 128,
+      "lr": 0.0005,
       "weight_decay": 1e-05,
       "dropout": 0.2,
       "num_layers": 3,
-      "batch_size": 64
+      "batch_size": 256
     },
-    "best_cv_f1_macro": 0.275770342676904,
+    "best_cv_f1_macro": 0.38922139688960794,
     "test_metrics": {
-      "accuracy": 0.27976190476190477,
-      "f1_macro": 0.26797318081844057,
-      "f1_weighted": 0.26797318081844057,
+      "accuracy": 0.4243486973947896,
+      "f1_macro": 0.3927090507423272,
+      "f1_weighted": 0.41468910401571,
       "classification_report": {
         "defensive": {
-          "precision": 0.28113879003558717,
-          "recall": 0.3761904761904762,
-          "f1-score": 0.32179226069246436,
-          "support": 210.0
+          "precision": 0.3611738148984199,
+          "recall": 0.42328042328042326,
+          "f1-score": 0.38976857490864797,
+          "support": 378.0
         },
         "dynamic": {
-          "precision": 0.373134328358209,
-          "recall": 0.11904761904761904,
-          "f1-score": 0.18050541516245489,
-          "support": 210.0
+          "precision": 0.2981132075471698,
+          "recall": 0.18544600938967137,
+          "f1-score": 0.22865412445730826,
+          "support": 426.0
         },
         "positional": {
-          "precision": 0.29739776951672864,
-          "recall": 0.38095238095238093,
-          "f1-score": 0.33402922755741127,
-          "support": 210.0
+          "precision": 0.5184713375796178,
+          "recall": 0.5764872521246459,
+          "f1-score": 0.5459423205902079,
+          "support": 706.0
         },
         "tactical": {
-          "precision": 0.22869955156950672,
-          "recall": 0.24285714285714285,
-          "f1-score": 0.23556581986143188,
-          "support": 210.0
+          "precision": 0.3996023856858847,
+          "recall": 0.41358024691358025,
+          "f1-score": 0.4064711830131446,
+          "support": 486.0
         },
-        "accuracy": 0.27976190476190477,
+        "accuracy": 0.4243486973947896,
         "macro avg": {
-          "precision": 0.2950926098700079,
-          "recall": 0.27976190476190477,
-          "f1-score": 0.26797318081844057,
-          "support": 840.0
+          "precision": 0.394340186427773,
+          "recall": 0.3996984829270802,
+          "f1-score": 0.3927090507423272,
+          "support": 1996.0
         },
         "weighted avg": {
-          "precision": 0.2950926098700079,
-          "recall": 0.27976190476190477,
-          "f1-score": 0.26797318081844057,
-          "support": 840.0
+          "precision": 0.4127091443994224,
+          "recall": 0.4243486973947896,
+          "f1-score": 0.41468910401571,
+          "support": 1996.0
         }
       },
       "confusion_matrix": {
@@ -2642,28 +1808,106 @@
         ],
         "matrix": [
           [
-            79,
-            15,
-            62,
-            54
-          ],
-          [
-            59,
-            25,
-            73,
-            53
-          ],
-          [
-            56,
-            9,
-            80,
-            65
+            160,
+            36,
+            110,
+            72
           ],
           [
             87,
-            18,
-            54,
-            51
+            79,
+            138,
+            122
+          ],
+          [
+            113,
+            78,
+            407,
+            108
+          ],
+          [
+            83,
+            72,
+            130,
+            201
+          ]
+        ]
+      }
+    },
+    "snapshot_test_metrics": {
+      "accuracy": 0.35112514408860823,
+      "f1_macro": 0.3297473164139346,
+      "f1_weighted": 0.34719258168258643,
+      "classification_report": {
+        "defensive": {
+          "precision": 0.27517950708325245,
+          "recall": 0.37513227513227515,
+          "f1-score": 0.31747453263181463,
+          "support": 3780.0
+        },
+        "dynamic": {
+          "precision": 0.276355421686747,
+          "recall": 0.1724624060150376,
+          "f1-score": 0.21238425925925927,
+          "support": 4256.0
+        },
+        "positional": {
+          "precision": 0.45463753436550425,
+          "recall": 0.4452316848519201,
+          "f1-score": 0.44988545246277206,
+          "support": 7057.0
+        },
+        "tactical": {
+          "precision": 0.32715459583412954,
+          "recall": 0.3522633744855967,
+          "f1-score": 0.3392450213018924,
+          "support": 4860.0
+        },
+        "accuracy": 0.35112514408860823,
+        "macro avg": {
+          "precision": 0.3333317647424083,
+          "recall": 0.33627243512120736,
+          "f1-score": 0.3297473164139346,
+          "support": 19953.0
+        },
+        "weighted avg": {
+          "precision": 0.3515609495937815,
+          "recall": 0.35112514408860823,
+          "f1-score": 0.34719258168258643,
+          "support": 19953.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "defensive",
+          "dynamic",
+          "positional",
+          "tactical"
+        ],
+        "matrix": [
+          [
+            1418,
+            433,
+            1088,
+            841
+          ],
+          [
+            1013,
+            734,
+            1307,
+            1202
+          ],
+          [
+            1610,
+            827,
+            3142,
+            1478
+          ],
+          [
+            1112,
+            662,
+            1374,
+            1712
           ]
         ]
       }

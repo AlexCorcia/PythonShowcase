@@ -1,7 +1,8 @@
 modelo,features,search_kind,best_params,cv_f1_macro,test_accuracy,test_f1_macro,test_f1_weighted,n_train,n_test,elapsed_s,source_file
+gnn,graphs,random,"hidden_dim=128, lr=0.0005, weight_decay=1e-05, dropout=0.2, num_layers=3, batch_size=256",0.3892,0.4243,0.3927,0.4147,5985,1996,198.96,gnn_graphs.json
 random_forest,temporal,random,"n_estimators=300, min_samples_split=10, min_samples_leaf=8, max_features=log2, max_depth=None, class_weight=balanced",0.3737,0.3888,0.3802,0.3901,7948,1988,272.43,random_forest_temporal.json
+gnn_temporal,graphs,random,"hidden_dim=128, gru_hidden=64, lr=0.001, dropout=0.2, num_layers=3, batch_size=128",0.3824,0.3938,0.3795,0.3949,5985,1996,132.11,gnn_temporal_graphs.json
 logistic_regression,flat,grid,"C=0.01, class_weight=balanced",0.3463,0.3803,0.3656,0.3774,7948,1988,10.48,logistic_regression_flat.json
 xgboost,temporal,random,"subsample=0.7, reg_lambda=1.0, reg_alpha=0.1, n_estimators=600, min_child_weight=5, max_depth=3, learning_rate=0.05, gamma=0.1, colsample_bytree=0.9",0.3559,0.412,0.3579,0.3856,7948,1988,271.88,xgboost_temporal.json
 random_forest,flat,random,"n_estimators=600, min_samples_split=2, min_samples_leaf=2, max_features=log2, max_depth=6, class_weight=balanced",0.3531,0.3662,0.3569,0.367,7948,1988,263.99,random_forest_flat.json
 xgboost,flat,random,"subsample=0.9, reg_lambda=2.0, reg_alpha=1.0, n_estimators=600, min_child_weight=5, max_depth=3, learning_rate=0.1, gamma=0.1, colsample_bytree=0.8",0.319,0.3888,0.3338,0.3617,7948,1988,217.49,xgboost_flat.json
-gnn,graphs,random,"hidden_dim=256, lr=0.001, weight_decay=1e-05, dropout=0.2, num_layers=3, batch_size=64",0.2758,0.2798,0.268,0.268,2520,840,182.65,gnn_graphs.json
