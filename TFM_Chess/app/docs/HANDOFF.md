@@ -279,13 +279,16 @@ python -m app.src.experiments.unified_comparison           # igualdad de condici
 ## 11. Estado de git
 
 - Rama: `main`. Repo: https://github.com/AlexCorcia/PythonShowcase
-- Último commit publicado: `1878467` "Phase 2-3: LOPO + comparison artifacts".
-- **SIN COMMITEAR** (cambios de esta sesión): todo el overhaul de la GNN
-  (`build_chess_graphs.py`, `prepare_gnn_dataset.py`, `hp_search_gnn.py`,
-  `train_temporal_gnn.py`, `unified_comparison.py`), los nuevos resultados/figuras,
-  `requirements.txt` (añadido `tabulate`), y los docs `seccion4_borrador.md`,
-  `gnn_improvements_log.md` y este HANDOFF.
-- Los artefactos de grafos (`app/data/graphs/`) están gitignored: se regeneran.
+- Commit del overhaul de la GNN: `fc0c5cf` "GNN overhaul: graphs from worst to
+  top-tier" (incluye `build_chess_graphs.py`, `prepare_gnn_dataset.py`,
+  `hp_search_gnn.py`, `train_temporal_gnn.py`, `unified_comparison.py`, nuevos
+  resultados/figuras y los docs `seccion4_borrador.md`, `gnn_improvements_log.md`
+  y este HANDOFF). Commit anterior: `1878467` "Phase 2-3: LOPO + comparison".
+- **Estado de push:** confirmar con `git log origin/main..main`. Si `fc0c5cf` no
+  está en `origin/main`, hacer `git push origin main` para que otra sesión pueda
+  clonarlo.
+- Los artefactos de grafos (`app/data/graphs/`) están gitignored: se regeneran
+  (ver §9).
 
 ---
 
