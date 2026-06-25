@@ -1,0 +1,298 @@
+{
+  "model": "xgboost",
+  "features": "flat",
+  "all_runs": [
+    {
+      "model": "xgboost",
+      "features": "flat",
+      "search_kind": "grid",
+      "n_train": 7948,
+      "n_test": 1988,
+      "search_space_size": 24,
+      "elapsed_seconds": 106.32,
+      "best_params": {
+        "model__learning_rate": 0.03,
+        "model__max_depth": 3,
+        "model__n_estimators": 600,
+        "model__subsample": 1.0
+      },
+      "best_cv_f1_macro": 0.31734020000991375,
+      "test_metrics": {
+        "accuracy": 0.40040241448692154,
+        "f1_macro": 0.3249298119862659,
+        "f1_weighted": 0.3573149666187359,
+        "classification_report": {
+          "defensive": {
+            "precision": 0.35609756097560974,
+            "recall": 0.19466666666666665,
+            "f1-score": 0.2517241379310345,
+            "support": 375.0
+          },
+          "dynamic": {
+            "precision": 0.3469387755102041,
+            "recall": 0.08,
+            "f1-score": 0.13001912045889102,
+            "support": 425.0
+          },
+          "positional": {
+            "precision": 0.42560553633217996,
+            "recall": 0.6988636363636364,
+            "f1-score": 0.5290322580645161,
+            "support": 704.0
+          },
+          "tactical": {
+            "precision": 0.3724007561436673,
+            "recall": 0.40702479338842973,
+            "f1-score": 0.3889437314906219,
+            "support": 484.0
+          },
+          "accuracy": 0.40040241448692154,
+          "macro avg": {
+            "precision": 0.3752606572404153,
+            "recall": 0.3451387741046832,
+            "f1-score": 0.3249298119862659,
+            "support": 1988.0
+          },
+          "weighted avg": {
+            "precision": 0.38272325377720323,
+            "recall": 0.40040241448692154,
+            "f1-score": 0.3573149666187359,
+            "support": 1988.0
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "defensive",
+            "dynamic",
+            "positional",
+            "tactical"
+          ],
+          "matrix": [
+            [
+              73,
+              10,
+              207,
+              85
+            ],
+            [
+              32,
+              34,
+              223,
+              136
+            ],
+            [
+              65,
+              36,
+              492,
+              111
+            ],
+            [
+              35,
+              18,
+              234,
+              197
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "model": "xgboost",
+      "features": "flat",
+      "search_kind": "random",
+      "n_train": 7948,
+      "n_test": 1988,
+      "search_space_size": 40,
+      "elapsed_seconds": 217.49,
+      "best_params": {
+        "model__subsample": 0.9,
+        "model__reg_lambda": 2.0,
+        "model__reg_alpha": 1.0,
+        "model__n_estimators": 600,
+        "model__min_child_weight": 5,
+        "model__max_depth": 3,
+        "model__learning_rate": 0.1,
+        "model__gamma": 0.1,
+        "model__colsample_bytree": 0.8
+      },
+      "best_cv_f1_macro": 0.3189616026887833,
+      "test_metrics": {
+        "accuracy": 0.3888329979879276,
+        "f1_macro": 0.33384442420066507,
+        "f1_weighted": 0.36167615100220846,
+        "classification_report": {
+          "defensive": {
+            "precision": 0.33476394849785407,
+            "recall": 0.208,
+            "f1-score": 0.2565789473684211,
+            "support": 375.0
+          },
+          "dynamic": {
+            "precision": 0.3333333333333333,
+            "recall": 0.15058823529411763,
+            "f1-score": 0.20745542949756887,
+            "support": 425.0
+          },
+          "positional": {
+            "precision": 0.42368177613321,
+            "recall": 0.6505681818181818,
+            "f1-score": 0.5131652661064425,
+            "support": 704.0
+          },
+          "tactical": {
+            "precision": 0.35892116182572614,
+            "recall": 0.3574380165289256,
+            "f1-score": 0.3581780538302277,
+            "support": 484.0
+          },
+          "accuracy": 0.3888329979879276,
+          "macro avg": {
+            "precision": 0.36267505494753094,
+            "recall": 0.3416486084103062,
+            "f1-score": 0.33384442420066507,
+            "support": 1988.0
+          },
+          "weighted avg": {
+            "precision": 0.37182744470563045,
+            "recall": 0.3888329979879276,
+            "f1-score": 0.36167615100220846,
+            "support": 1988.0
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "defensive",
+            "dynamic",
+            "positional",
+            "tactical"
+          ],
+          "matrix": [
+            [
+              78,
+              26,
+              189,
+              82
+            ],
+            [
+              41,
+              64,
+              210,
+              110
+            ],
+            [
+              69,
+              60,
+              458,
+              117
+            ],
+            [
+              45,
+              42,
+              224,
+              173
+            ]
+          ]
+        }
+      }
+    }
+  ],
+  "best_run": {
+    "model": "xgboost",
+    "features": "flat",
+    "search_kind": "random",
+    "n_train": 7948,
+    "n_test": 1988,
+    "search_space_size": 40,
+    "elapsed_seconds": 217.49,
+    "best_params": {
+      "model__subsample": 0.9,
+      "model__reg_lambda": 2.0,
+      "model__reg_alpha": 1.0,
+      "model__n_estimators": 600,
+      "model__min_child_weight": 5,
+      "model__max_depth": 3,
+      "model__learning_rate": 0.1,
+      "model__gamma": 0.1,
+      "model__colsample_bytree": 0.8
+    },
+    "best_cv_f1_macro": 0.3189616026887833,
+    "test_metrics": {
+      "accuracy": 0.3888329979879276,
+      "f1_macro": 0.33384442420066507,
+      "f1_weighted": 0.36167615100220846,
+      "classification_report": {
+        "defensive": {
+          "precision": 0.33476394849785407,
+          "recall": 0.208,
+          "f1-score": 0.2565789473684211,
+          "support": 375.0
+        },
+        "dynamic": {
+          "precision": 0.3333333333333333,
+          "recall": 0.15058823529411763,
+          "f1-score": 0.20745542949756887,
+          "support": 425.0
+        },
+        "positional": {
+          "precision": 0.42368177613321,
+          "recall": 0.6505681818181818,
+          "f1-score": 0.5131652661064425,
+          "support": 704.0
+        },
+        "tactical": {
+          "precision": 0.35892116182572614,
+          "recall": 0.3574380165289256,
+          "f1-score": 0.3581780538302277,
+          "support": 484.0
+        },
+        "accuracy": 0.3888329979879276,
+        "macro avg": {
+          "precision": 0.36267505494753094,
+          "recall": 0.3416486084103062,
+          "f1-score": 0.33384442420066507,
+          "support": 1988.0
+        },
+        "weighted avg": {
+          "precision": 0.37182744470563045,
+          "recall": 0.3888329979879276,
+          "f1-score": 0.36167615100220846,
+          "support": 1988.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "defensive",
+          "dynamic",
+          "positional",
+          "tactical"
+        ],
+        "matrix": [
+          [
+            78,
+            26,
+            189,
+            82
+          ],
+          [
+            41,
+            64,
+            210,
+            110
+          ],
+          [
+            69,
+            60,
+            458,
+            117
+          ],
+          [
+            45,
+            42,
+            224,
+            173
+          ]
+        ]
+      }
+    }
+  }
+}

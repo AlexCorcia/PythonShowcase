@@ -40,3 +40,7 @@ Thumbs.db
 
 # Cache
 .cache/
+
+# Generated graph artifacts (regeneratable from PGN via app/src/graphs/build_chess_graphs.py)
+app/data/graphs/*.json
+app/data/graphs/*.pt

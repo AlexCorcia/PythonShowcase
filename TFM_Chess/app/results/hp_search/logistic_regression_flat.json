@@ -1,0 +1,190 @@
+{
+  "model": "logistic_regression",
+  "features": "flat",
+  "all_runs": [
+    {
+      "model": "logistic_regression",
+      "features": "flat",
+      "search_kind": "grid",
+      "n_train": 7948,
+      "n_test": 1988,
+      "search_space_size": 8,
+      "elapsed_seconds": 10.48,
+      "best_params": {
+        "model__C": 0.01,
+        "model__class_weight": "balanced"
+      },
+      "best_cv_f1_macro": 0.34625100209846,
+      "test_metrics": {
+        "accuracy": 0.38028169014084506,
+        "f1_macro": 0.36562919133318716,
+        "f1_weighted": 0.37736652198232645,
+        "classification_report": {
+          "defensive": {
+            "precision": 0.2920962199312715,
+            "recall": 0.4533333333333333,
+            "f1-score": 0.3552769070010449,
+            "support": 375.0
+          },
+          "dynamic": {
+            "precision": 0.3173431734317343,
+            "recall": 0.2023529411764706,
+            "f1-score": 0.2471264367816092,
+            "support": 425.0
+          },
+          "positional": {
+            "precision": 0.49019607843137253,
+            "recall": 0.390625,
+            "f1-score": 0.43478260869565216,
+            "support": 704.0
+          },
+          "tactical": {
+            "precision": 0.39198606271777003,
+            "recall": 0.46487603305785125,
+            "f1-score": 0.42533081285444235,
+            "support": 484.0
+          },
+          "accuracy": 0.38028169014084506,
+          "macro avg": {
+            "precision": 0.3729053836280371,
+            "recall": 0.3777968268919138,
+            "f1-score": 0.36562919133318716,
+            "support": 1988.0
+          },
+          "weighted avg": {
+            "precision": 0.39196490178762616,
+            "recall": 0.38028169014084506,
+            "f1-score": 0.37736652198232645,
+            "support": 1988.0
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "defensive",
+            "dynamic",
+            "positional",
+            "tactical"
+          ],
+          "matrix": [
+            [
+              170,
+              30,
+              86,
+              89
+            ],
+            [
+              101,
+              86,
+              97,
+              141
+            ],
+            [
+              209,
+              101,
+              275,
+              119
+            ],
+            [
+              102,
+              54,
+              103,
+              225
+            ]
+          ]
+        }
+      }
+    }
+  ],
+  "best_run": {
+    "model": "logistic_regression",
+    "features": "flat",
+    "search_kind": "grid",
+    "n_train": 7948,
+    "n_test": 1988,
+    "search_space_size": 8,
+    "elapsed_seconds": 10.48,
+    "best_params": {
+      "model__C": 0.01,
+      "model__class_weight": "balanced"
+    },
+    "best_cv_f1_macro": 0.34625100209846,
+    "test_metrics": {
+      "accuracy": 0.38028169014084506,
+      "f1_macro": 0.36562919133318716,
+      "f1_weighted": 0.37736652198232645,
+      "classification_report": {
+        "defensive": {
+          "precision": 0.2920962199312715,
+          "recall": 0.4533333333333333,
+          "f1-score": 0.3552769070010449,
+          "support": 375.0
+        },
+        "dynamic": {
+          "precision": 0.3173431734317343,
+          "recall": 0.2023529411764706,
+          "f1-score": 0.2471264367816092,
+          "support": 425.0
+        },
+        "positional": {
+          "precision": 0.49019607843137253,
+          "recall": 0.390625,
+          "f1-score": 0.43478260869565216,
+          "support": 704.0
+        },
+        "tactical": {
+          "precision": 0.39198606271777003,
+          "recall": 0.46487603305785125,
+          "f1-score": 0.42533081285444235,
+          "support": 484.0
+        },
+        "accuracy": 0.38028169014084506,
+        "macro avg": {
+          "precision": 0.3729053836280371,
+          "recall": 0.3777968268919138,
+          "f1-score": 0.36562919133318716,
+          "support": 1988.0
+        },
+        "weighted avg": {
+          "precision": 0.39196490178762616,
+          "recall": 0.38028169014084506,
+          "f1-score": 0.37736652198232645,
+          "support": 1988.0
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "defensive",
+          "dynamic",
+          "positional",
+          "tactical"
+        ],
+        "matrix": [
+          [
+            170,
+            30,
+            86,
+            89
+          ],
+          [
+            101,
+            86,
+            97,
+            141
+          ],
+          [
+            209,
+            101,
+            275,
+            119
+          ],
+          [
+            102,
+            54,
+            103,
+            225
+          ]
+        ]
+      }
+    }
+  }
+}

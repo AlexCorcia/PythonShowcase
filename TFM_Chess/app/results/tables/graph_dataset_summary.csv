@@ -1,0 +1,5 @@
+main_player,style,num_snapshots,avg_nodes,avg_edges
+Karpov,positional,21.0,31.21,44.77
+Kasparov,dynamic,21.0,30.91,43.59
+Petrosian,defensive,21.0,31.05,43.82
+Tal,tactical,21.0,30.88,43.55

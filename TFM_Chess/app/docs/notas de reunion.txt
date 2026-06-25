@@ -1,0 +1,27 @@
+- Trabajar mas en los parámetros para poder sacar mejores resultados
+- No hablo de los hiperparametros en ningún momento, tienen que tener una manera lógica de elegirlos
+	- Random Forest: - Grid Search
+			 - Randomize Search
+	- Regresión Logistca: - Grid Search
+	- XGBoost: - Grid Search
+			 - Randomize search
+- Para los grafos tenenmos que sacar mejores resultados entonces hay que buscar mejores hiperparametros o algo asi
+- Cuidar la tabla del p3.2
+- Quita el 3.0 (mucho bla bla bla)
+- 3.3 Alignar o cambiar con otras palabras.
+- Hacer un marco Teorico en el 2 para no tener que volver a nada teorico mas adelante.
+- Intentar detectar el estilo de un jugador -> para ver que resultados da
+- Enfocar mas la detección de estilo de juego.
+- Mirar si con otras métricas podemos ayudarnos a detectar el estilo de jugadores que no hemos entrenado.
+
+
+Cambios en el 4.0
+- El 4.0 debería de ser solo técnico nada de teoría.
+- Tecnica y hiperparametros.
+- Una tabla con el método y sus hiperparametros, para cada técnica del 4.
+- Y al final metemos una tabla con todo y que metrica usamos para saber cual es el mejor (F1 es la mejor)
+- DE TODO ESTO: ANALYSIS DE RESULTADOS.
+
+
+Ultima nota, Ordenar bien las cosas entre el marco teorico y el técnico. (2.0 y 4.0)
+Recuerda el estio APA-
