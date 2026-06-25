@@ -44,14 +44,41 @@ commiteados** en el momento de escribir (ver §11).
 
 ---
 
-## 3. Estado de §2 y §3
+## 3. Estado de §2 y §3 — CAMBIOS NECESARIOS por el overhaul de la GNN
 
-- §2.3 Marco Teórico cubre aprendizaje supervisado, modelos clásicos, optimización
-  de HP, métricas y grafos en ajedrez.
-- Las dos correcciones de §2 que estaban pendientes (§2.2.6 título →
-  "Representación basada en grafos en ajedrez"; §2.3.5 reframe dato dinámico vs
-  modelo estático) **el usuario confirmó que ya están aplicadas** en el .docx.
-- §3.2/§3.3 prometen optimización de HP y evaluación por F1-macro; §4 lo cumple.
+Se releyó el texto real del .docx. Estructura real de §2: §2.1 Contexto, §2.2
+Estado del arte (revisión de literatura), §2.3 **Marco Teórico** (subsecciones:
+aprendizaje supervisado, modelos clásicos, optimización de HP, métricas, "Grafos
+temporales dinámicos"), §2.4 Conclusiones. (Ojo: **el índice del .docx está
+desactualizado** y muestra §2.3 como "Conclusiones".)
+
+**Sí hace falta tocar §2 y §3** porque el código de grafos cambió: ahora hay dos
+arquitecturas (GCN estática + agregación y modelo temporal **GCN+GRU**) y una
+comparación en igualdad de condiciones. El §4 es técnico, pero la directora exige
+que **la teoría esté en §2**, y hoy §2.3 explica los grafos como dato pero **no**
+explica (1) cómo aprende una **GNN/GCN** (paso de mensajes, pooling) ni (2) qué es
+un **modelo de secuencia (RNN/GRU)**.
+
+➡️ **El texto concreto a añadir/editar (6 cambios) está en
+`app/docs/seccion2y3_actualizaciones.md`** — borrador listo para revisar e
+incorporar al .docx. Resumen:
+- **§2.3:** añadir párrafo de cierre en "Grafos temporales dinámicos" (distinguir
+  dato dinámico vs modelo) + **dos subsecciones nuevas**: "Redes neuronales sobre
+  grafos (GNN)" y "Modelos de secuencia (RNN/GRU)". Actualizar la enumeración de
+  técnicas en §2.4 Conclusiones.
+- **§3.2:** reescribir el objetivo de la GNN para reflejar las **dos
+  arquitecturas** y la comparación en igualdad de condiciones.
+- **§3.3:** reescribir el párrafo de grafos (dos arquitecturas, predicción a nivel
+  de partida, mismas particiones para todos, promedio sobre semillas).
+
+**NO cambian:** §2.1, §2.2 (estado del arte), ni las subsecciones de §2.3 sobre
+modelos clásicos / HP / métricas / aprendizaje supervisado. El objetivo general
+(§3.1) tampoco.
+
+**Discrepancias detectadas (verificar en el .docx):** (a) índice desactualizado;
+(b) §2.2.5 y §2.2.6 con el mismo título en esta copia —si la corrección a
+"Representación basada en grafos en ajedrez" ya se hizo en otra copia, ignorar—;
+(c) §4.7 tiene dos subsecciones tituladas "Resultados experimentales".
 
 ---
 
