@@ -1,0 +1,42 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+Thumbs.db
+.buildlog/
+.history
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code
+.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+.dart_tool/
+.flutter-plugin-dependencies
+.pub-cache/
+.pub/
+/build/
+build/
+app.*.symbols
+app.*.map.json
+
+# Android
+android/.gradle/
+android/local.properties
+android/key.properties
+android/**/*.keystore
+android/**/*.jks
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Coverage
+coverage/
