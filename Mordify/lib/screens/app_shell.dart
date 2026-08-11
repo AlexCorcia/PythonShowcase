@@ -590,6 +590,10 @@ class _AppShellState extends State<AppShell> {
     }
     await _persist();
     await _persistCompletionLog();
+    // Completing a task should cancel its pending reminder immediately
+    // (otherwise it still fires later today even though it's done);
+    // un-completing it should re-arm one, since it's due again.
+    await _scheduleTaskSafely(task);
     await _refreshStatusNotification();
     if (checked == true) await _checkForNewBadges();
   }

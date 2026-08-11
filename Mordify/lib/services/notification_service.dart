@@ -67,6 +67,11 @@ class NotificationService {
   Future<void> scheduleForTask(Task task) async {
     await cancelForTask(task);
 
+    // Already done for the current period - nothing left to remind about
+    // until it resets, at which point BackgroundService's periodic tick
+    // (or the next edit/toggle) re-arms it via this same method.
+    if (task.isDoneForCurrentPeriod) return;
+
     // No reminder configured (either the user opted out, or the task's
     // frequency - like timesPerWeek - has no fixed moment to notify about).
     final hour = task.hour;
