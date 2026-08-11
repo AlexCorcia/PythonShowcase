@@ -9,7 +9,13 @@ const _frequencyIcons = {
   TaskFrequency.monthly: Icons.calendar_month_outlined,
   TaskFrequency.interval: Icons.repeat,
   TaskFrequency.timesPerWeek: Icons.tag,
+  TaskFrequency.once: Icons.notifications_outlined,
 };
+
+const _monthAbbrev = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+];
 
 class TaskTile extends StatefulWidget {
   final Task task;
@@ -68,6 +74,15 @@ class _TaskTileState extends State<TaskTile> {
         return 'Every ${task.intervalDays} days$timeLabel';
       case TaskFrequency.timesPerWeek:
         return '${task.targetCount ?? 1}x a week, no specific day';
+      case TaskFrequency.once:
+        final due = task.dueDate;
+        if (due == null) return 'One-time reminder$timeLabel';
+        final dateLabel = '${_monthAbbrev[due.month - 1]} ${due.day}';
+        final today = DateTime.now();
+        final isOverdue = !task.isDoneForCurrentPeriod &&
+            DateTime(due.year, due.month, due.day)
+                .isBefore(DateTime(today.year, today.month, today.day));
+        return isOverdue ? 'Overdue - was due $dateLabel$timeLabel' : 'Due $dateLabel$timeLabel';
     }
   }
 
@@ -114,16 +129,30 @@ class _TaskTileState extends State<TaskTile> {
                 ],
               ],
             ),
-            subtitle: Row(
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                if (!isCounter) ...[
-                  Icon(_frequencyIcons[task.frequency], size: 14, color: mutedColor),
-                  const SizedBox(width: 4),
-                ],
-                Flexible(
-                  child: Text(_subtitle,
-                      style: theme.textTheme.bodySmall?.copyWith(color: mutedColor)),
+                Row(
+                  children: [
+                    if (!isCounter) ...[
+                      Icon(_frequencyIcons[task.frequency], size: 14, color: mutedColor),
+                      const SizedBox(width: 4),
+                    ],
+                    Flexible(
+                      child: Text(_subtitle,
+                          style: theme.textTheme.bodySmall?.copyWith(color: mutedColor)),
+                    ),
+                  ],
                 ),
+                if (task.notes != null && task.notes!.isNotEmpty)
+                  Text(
+                    task.notes!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodySmall
+                        ?.copyWith(color: mutedColor, fontStyle: FontStyle.italic),
+                  ),
               ],
             ),
             trailing: Row(

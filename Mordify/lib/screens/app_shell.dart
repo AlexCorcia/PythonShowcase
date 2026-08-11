@@ -30,12 +30,14 @@ const _defaultFrequencyByCategory = {
   TaskCategory.daily: TaskFrequency.daily,
   TaskCategory.weekly: TaskFrequency.weekly,
   TaskCategory.monthly: TaskFrequency.monthly,
+  TaskCategory.reminder: TaskFrequency.once,
 };
 
 const _categoryIcons = {
   TaskCategory.daily: Icons.wb_sunny_outlined,
   TaskCategory.weekly: Icons.calendar_view_week,
   TaskCategory.monthly: Icons.calendar_month_outlined,
+  TaskCategory.reminder: Icons.notifications_outlined,
 };
 
 /// Owns all app state (tasks, folders, completion log, settings, profile)
@@ -579,7 +581,12 @@ class _AppShellState extends State<AppShell> {
       final points = task.completeOnce();
       setState(() => _logCompletion(task, task.lastCompletedAt!));
       await _profile.addPoints(points);
-      _showCompletionCelebration(points, streak: task.currentStreak, taskTitle: task.title);
+      // A one-time reminder awards 0 points - a "+0" celebration would just
+      // look broken, so only show it when there's actually something to
+      // celebrate.
+      if (points > 0) {
+        _showCompletionCelebration(points, streak: task.currentStreak, taskTitle: task.title);
+      }
     } else {
       final lost = task.lastAwardedPoints ?? 0;
       setState(() {
@@ -756,29 +763,36 @@ class _AppShellState extends State<AppShell> {
             children: [
               Text('Tasks', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w500)),
               const SizedBox(height: 14),
-              SegmentedButton<TaskCategory>(
-                segments: const [
-                  ButtonSegment(
-                    value: TaskCategory.daily,
-                    label: Text('Daily', softWrap: false, overflow: TextOverflow.visible),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SegmentedButton<TaskCategory>(
+                  segments: const [
+                    ButtonSegment(
+                      value: TaskCategory.daily,
+                      label: Text('Daily', softWrap: false, overflow: TextOverflow.visible),
+                    ),
+                    ButtonSegment(
+                      value: TaskCategory.weekly,
+                      label: Text('Weekly', softWrap: false, overflow: TextOverflow.visible),
+                    ),
+                    ButtonSegment(
+                      value: TaskCategory.monthly,
+                      label: Text('Monthly', softWrap: false, overflow: TextOverflow.visible),
+                    ),
+                    ButtonSegment(
+                      value: TaskCategory.reminder,
+                      label: Text('Reminders', softWrap: false, overflow: TextOverflow.visible),
+                    ),
+                  ],
+                  selected: {_selectedCategory},
+                  showSelectedIcon: false,
+                  style: const ButtonStyle(
+                    padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 14, vertical: 10)),
+                    visualDensity: VisualDensity.compact,
                   ),
-                  ButtonSegment(
-                    value: TaskCategory.weekly,
-                    label: Text('Weekly', softWrap: false, overflow: TextOverflow.visible),
-                  ),
-                  ButtonSegment(
-                    value: TaskCategory.monthly,
-                    label: Text('Monthly', softWrap: false, overflow: TextOverflow.visible),
-                  ),
-                ],
-                selected: {_selectedCategory},
-                showSelectedIcon: false,
-                style: const ButtonStyle(
-                  padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 14, vertical: 10)),
-                  visualDensity: VisualDensity.compact,
+                  onSelectionChanged: (selected) =>
+                      setState(() => _selectedCategory = selected.first),
                 ),
-                onSelectionChanged: (selected) =>
-                    setState(() => _selectedCategory = selected.first),
               ),
             ],
           ),

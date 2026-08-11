@@ -53,6 +53,11 @@ DateTime? nextReminderOccurrence(Task task, {DateTime? now}) {
 
     case TaskFrequency.timesPerWeek:
       return null; // unreachable - hasReminder is always false for this frequency
+
+    case TaskFrequency.once:
+      final due = task.dueDate;
+      if (due == null) return null;
+      return DateTime(due.year, due.month, due.day, task.hour!, task.minute!);
   }
 }
 

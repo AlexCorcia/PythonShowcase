@@ -19,11 +19,17 @@ enum TaskFrequency {
   /// attached (e.g. "walk the dogs 5 times a week"). Never has a reminder
   /// time - there's no fixed moment to remind about.
   timesPerWeek,
+
+  /// A single one-off reminder on a specific date - never recurs, never
+  /// resets once completed, and never awards points (see [_frequencyWeight]).
+  /// The "Reminders" segment for things like "renew passport" that don't fit
+  /// the habit-tracking/gamification model the other frequencies share.
+  once,
 }
 
 /// Which tab/bucket of the app a task belongs in, and which bucket its
 /// pending count rolls up into on the persistent status notification.
-enum TaskCategory { daily, weekly, monthly }
+enum TaskCategory { daily, weekly, monthly, reminder }
 
 /// A single checklist step within a task (e.g. "Cleanse" under a "Skin Care"
 /// task). Purely a visual checklist - it never has its own reminder and
@@ -95,6 +101,10 @@ bool _isWithinPeriod(
               .inDays ~/
           days;
       return completedPeriod == currentPeriod;
+    case TaskFrequency.once:
+      // No period to reset against - once it's completed (completedAt != null,
+      // already handled above) it stays done forever.
+      return true;
   }
 }
 
@@ -141,6 +151,10 @@ int _periodIndexFor(
               .difference(DateTime(anchor.year, anchor.month, anchor.day))
               .inDays ~/
           days;
+    case TaskFrequency.once:
+      // Unused - Task.completeOnce() special-cases TaskFrequency.once and
+      // never calls this, since a one-off task has no streak to track.
+      return 0;
   }
 }
 
@@ -167,6 +181,10 @@ double _frequencyWeight(
     case TaskFrequency.timesPerWeek:
       // Fewer times/week target => each one is closer to a weekly task.
       return (5.0 / (targetCount ?? 3)).clamp(1.0, 3.0);
+    case TaskFrequency.once:
+      // Unused - Task.completeOnce() special-cases TaskFrequency.once and
+      // never calls _pointsFor, since one-off reminders never award points.
+      return 0.0;
   }
 }
 
@@ -214,9 +232,18 @@ class Task {
   int? targetCount;
   int? weeklyCompletionCount;
   DateTime? weeklyPeriodStart;
+
+  /// The single date this reminder is due - only meaningful for
+  /// [TaskFrequency.once].
+  DateTime? dueDate;
+
   String? folderId;
   DateTime? lastCompletedAt;
   List<SubTask> subtasks;
+
+  /// Optional free-text detail (e.g. why a habit matters, a link, a
+  /// dosage). Purely informational - never affects scheduling or scoring.
+  String? notes;
 
   /// When this task was created - the longer it's stuck around, the more
   /// points each completion is worth.
@@ -254,6 +281,7 @@ class Task {
     this.targetCount,
     this.weeklyCompletionCount,
     this.weeklyPeriodStart,
+    this.dueDate,
     this.folderId,
     this.lastCompletedAt,
     List<SubTask>? subtasks,
@@ -262,6 +290,7 @@ class Task {
     this.totalCompletions = 0,
     this.lastAwardedPoints,
     this.freezesAvailable = 0,
+    this.notes,
   })  : subtasks = subtasks ?? [],
         createdAt = createdAt ?? DateTime.now();
 
@@ -279,8 +308,18 @@ class Task {
   }
 
   /// Whether this task is actually due today (relevant for [TaskFrequency.weekdays]
-  /// tasks, which don't apply on weekends).
-  bool get isDueToday => frequency != TaskFrequency.weekdays || !_isWeekend;
+  /// tasks, which don't apply on weekends, and [TaskFrequency.once] tasks,
+  /// which are only "due" on or after their [dueDate]).
+  bool get isDueToday {
+    if (frequency == TaskFrequency.once) {
+      final due = dueDate;
+      if (due == null) return false;
+      final today = DateTime.now();
+      return !DateTime(due.year, due.month, due.day)
+          .isAfter(DateTime(today.year, today.month, today.day));
+    }
+    return frequency != TaskFrequency.weekdays || !_isWeekend;
+  }
 
   /// Completions so far in the current week, resolving a stale
   /// [weeklyPeriodStart] (from a previous week) to 0.
@@ -329,6 +368,15 @@ class Task {
   /// earned back every 7-period streak milestone, capped at [_maxFreezes].
   /// Returns the points awarded.
   int completeOnce() {
+    if (frequency == TaskFrequency.once) {
+      // A one-off reminder has no period/streak to track and never awards
+      // points - just record that it happened.
+      totalCompletions += 1;
+      lastCompletedAt = DateTime.now();
+      lastAwardedPoints = 0;
+      return 0;
+    }
+
     final now = DateTime.now();
     final currentPeriod =
         _periodIndexFor(frequency, now, intervalDays: intervalDays, anchorDate: anchorDate);
@@ -403,6 +451,8 @@ class Task {
         return TaskCategory.weekly;
       case TaskFrequency.monthly:
         return TaskCategory.monthly;
+      case TaskFrequency.once:
+        return TaskCategory.reminder;
     }
   }
 
@@ -423,6 +473,7 @@ class Task {
         'targetCount': targetCount,
         'weeklyCompletionCount': weeklyCompletionCount,
         'weeklyPeriodStart': weeklyPeriodStart?.toIso8601String(),
+        'dueDate': dueDate?.toIso8601String(),
         'folderId': folderId,
         'lastCompletedAt': lastCompletedAt?.toIso8601String(),
         'subtasks': subtasks.map((s) => s.toJson()).toList(),
@@ -431,6 +482,7 @@ class Task {
         'totalCompletions': totalCompletions,
         'lastAwardedPoints': lastAwardedPoints,
         'freezesAvailable': freezesAvailable,
+        'notes': notes,
       };
 
   factory Task.fromJson(Map<String, dynamic> json) => Task(
@@ -450,6 +502,9 @@ class Task {
         weeklyPeriodStart: json['weeklyPeriodStart'] == null
             ? null
             : DateTime.parse(json['weeklyPeriodStart'] as String),
+        dueDate: json['dueDate'] == null
+            ? null
+            : DateTime.parse(json['dueDate'] as String),
         folderId: json['folderId'] as String?,
         lastCompletedAt: json['lastCompletedAt'] == null
             ? null
@@ -464,6 +519,7 @@ class Task {
         totalCompletions: json['totalCompletions'] as int? ?? 0,
         lastAwardedPoints: json['lastAwardedPoints'] as int?,
         freezesAvailable: json['freezesAvailable'] as int? ?? 0,
+        notes: json['notes'] as String?,
       );
 }
 

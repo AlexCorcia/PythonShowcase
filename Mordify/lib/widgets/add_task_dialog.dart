@@ -12,7 +12,13 @@ const _frequencyLabels = {
   TaskFrequency.monthly: 'Monthly',
   TaskFrequency.interval: 'Every N days',
   TaskFrequency.timesPerWeek: 'X times a week',
+  TaskFrequency.once: 'One-time reminder',
 };
+
+const _monthAbbrev = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+];
 
 const _createFolderSentinel = '__create_folder__';
 
@@ -63,8 +69,11 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
   late int _dayOfMonth = widget.existingTask?.dayOfMonth ?? 1;
   late int _intervalDays = widget.existingTask?.intervalDays ?? 2;
   late int _targetCount = widget.existingTask?.targetCount ?? 3;
+  late DateTime _dueDate = widget.existingTask?.dueDate ?? DateTime.now();
   late List<Folder> _folders = List.of(widget.folders);
   late String? _folderId = widget.existingTask?.folderId;
+  late final _notesController =
+      TextEditingController(text: widget.existingTask?.notes ?? '');
 
   // Deep copy so Cancel is a true no-op, matching how every other field here
   // stays local until _submit().
@@ -80,6 +89,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
   @override
   void dispose() {
     _titleController.dispose();
+    _notesController.dispose();
     _newSubtaskController.dispose();
     for (final c in _subtaskControllers.values) {
       c.dispose();
@@ -118,6 +128,17 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
   Future<void> _pickTime() async {
     final picked = await showTimePicker(context: context, initialTime: _time);
     if (picked != null) setState(() => _time = picked);
+  }
+
+  Future<void> _pickDueDate() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _dueDate.isBefore(now) ? now : _dueDate,
+      firstDate: now.subtract(const Duration(days: 1)),
+      lastDate: now.add(const Duration(days: 365 * 5)),
+    );
+    if (picked != null) setState(() => _dueDate = picked);
   }
 
   Future<void> _handleFolderSelection(String? value) async {
@@ -179,8 +200,12 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
           ? (task.anchorDate ?? DateTime(now.year, now.month, now.day))
           : null
       ..targetCount = _frequency == TaskFrequency.timesPerWeek ? _targetCount : null
+      ..dueDate = _frequency == TaskFrequency.once
+          ? DateTime(_dueDate.year, _dueDate.month, _dueDate.day)
+          : null
       ..folderId = _folderId
-      ..subtasks = _subtasks;
+      ..subtasks = _subtasks
+      ..notes = _notesController.text.trim().isEmpty ? null : _notesController.text.trim();
 
     if (_frequency != TaskFrequency.timesPerWeek) {
       task
@@ -273,6 +298,22 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
               ),
               const SizedBox(height: 16),
             ],
+            if (_frequency == TaskFrequency.once) ...[
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Due date'),
+                trailing: Text(
+                  '${_monthAbbrev[_dueDate.month - 1]} ${_dueDate.day}, ${_dueDate.year}',
+                ),
+                onTap: _pickDueDate,
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                "A single reminder, not a recurring habit - doesn't earn points.",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+              const SizedBox(height: 16),
+            ],
             if (_frequency == TaskFrequency.weekdays)
               const Padding(
                 padding: EdgeInsets.only(bottom: 16),
@@ -328,6 +369,13 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                   onTap: _pickTime,
                 ),
             ],
+            const SizedBox(height: 16),
+            TextField(
+              controller: _notesController,
+              minLines: 1,
+              maxLines: 4,
+              decoration: const InputDecoration(labelText: 'Notes (optional)'),
+            ),
             const SizedBox(height: 8),
             Text('Steps', style: theme.textTheme.labelLarge),
             const SizedBox(height: 4),

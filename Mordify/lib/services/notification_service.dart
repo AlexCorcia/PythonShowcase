@@ -118,13 +118,26 @@ class NotificationService {
         break;
       case TaskFrequency.timesPerWeek:
         return; // never has a reminder - no fixed moment to notify about
+      case TaskFrequency.once:
+        // One-shot, never repeats - re-armed only if the task is edited.
+        matchComponents = null;
+        break;
+    }
+
+    final scheduledDate = _nextOccurrence(task, hour, minute);
+    // A once task whose due date has already passed has nothing future to
+    // schedule - unlike every other frequency, _nextOccurrence doesn't roll
+    // it forward to the next valid occurrence (there isn't one).
+    if (task.frequency == TaskFrequency.once &&
+        !scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
+      return;
     }
 
     await _plugin.zonedSchedule(
       id: task.notificationId(),
       title: 'Mordify reminder',
       body: task.title,
-      scheduledDate: _nextOccurrence(task, hour, minute),
+      scheduledDate: scheduledDate,
       notificationDetails: _reminderDetails,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: matchComponents,
@@ -334,6 +347,12 @@ class NotificationService {
         break;
       case TaskFrequency.timesPerWeek:
         break; // never called - scheduleForTask returns early for this case
+      case TaskFrequency.once:
+        final due = task.dueDate;
+        if (due != null) {
+          scheduled = tz.TZDateTime(tz.local, due.year, due.month, due.day, hour, minute);
+        }
+        break;
     }
     return scheduled;
   }
