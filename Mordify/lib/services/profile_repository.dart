@@ -27,6 +27,8 @@ LevelInfo levelForPoints(int points) {
 class ProfileRepository {
   static const _totalPointsKey = 'mordify.totalPoints';
   static const _displayNameKey = 'mordify.displayName';
+  static const _unlockedBadgeIdsKey = 'mordify.unlockedBadgeIds';
+  static const _badgesBaselinedKey = 'mordify.badgesBaselined';
   static const defaultDisplayName = 'ML41';
 
   Future<int> getTotalPoints() async {
@@ -57,5 +59,29 @@ class ProfileRepository {
   Future<void> setDisplayName(String name) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_displayNameKey, name);
+  }
+
+  Future<Set<String>> getUnlockedBadgeIds() async {
+    final prefs = await SharedPreferences.getInstance();
+    return (prefs.getStringList(_unlockedBadgeIdsKey) ?? const []).toSet();
+  }
+
+  Future<void> setUnlockedBadgeIds(Set<String> ids) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(_unlockedBadgeIdsKey, ids.toList());
+  }
+
+  /// Whether [getUnlockedBadgeIds] has ever been seeded from the badges a
+  /// user already had unlocked when this feature shipped - without this,
+  /// every badge already earned by an existing user would look "new" on
+  /// their first launch post-upgrade and fire a celebration for each.
+  Future<bool> hasBaselinedBadges() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_badgesBaselinedKey) ?? false;
+  }
+
+  Future<void> markBadgesBaselined() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_badgesBaselinedKey, true);
   }
 }

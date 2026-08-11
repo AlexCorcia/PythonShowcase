@@ -13,6 +13,7 @@ import '../services/settings_repository.dart';
 import '../services/task_repository.dart';
 import '../services/theme_controller.dart';
 import '../widgets/add_task_dialog.dart';
+import '../widgets/badge_unlock_overlay.dart';
 import '../widgets/folder_section.dart';
 import '../widgets/points_burst_overlay.dart';
 import '../widgets/settings_sheet.dart';
@@ -20,7 +21,9 @@ import '../widgets/task_tile.dart';
 import 'achievements_screen.dart';
 import 'calendar_screen.dart';
 import 'home_dashboard_screen.dart';
+import 'onboarding_screen.dart';
 import 'profile_screen.dart';
+import 'stats_screen.dart';
 
 /// The frequency the "+" button creates by default in each Tasks segment.
 const _defaultFrequencyByCategory = {
@@ -58,7 +61,9 @@ class _AppShellState extends State<AppShell> {
   List<Task> _tasks = [];
   List<Folder> _folders = [];
   List<CompletionRecord> _completionLog = [];
+  Set<String> _unlockedBadgeIds = {};
   bool _loading = true;
+  bool _pendingOnboarding = false;
   bool _showStatusNotification = true;
   NotificationContentMode _notificationContentMode = NotificationContentMode.countsOnly;
 
@@ -79,6 +84,10 @@ class _AppShellState extends State<AppShell> {
   Future<void> _load() async {
     var tasks = await _repository.loadTasks();
     var folders = await _repository.loadFolders();
+    // hasSeededDefaults() flips true the moment the seed block below runs,
+    // so it must be captured before that happens to still mean "this is a
+    // brand-new install".
+    final isFirstRun = !await _repository.hasSeededDefaults();
 
     if (!await _repository.hasSeededDefaults()) {
       final defaults = buildDefaultTasks();
@@ -150,15 +159,59 @@ class _AppShellState extends State<AppShell> {
     final showStatus = await _settings.getShowStatusNotification();
     final contentMode = await _settings.getNotificationContentMode();
 
+    var unlockedBadgeIds = await _profile.getUnlockedBadgeIds();
+    if (!await _profile.hasBaselinedBadges()) {
+      final points = await _profile.getTotalPoints();
+      final badgeContext = AchievementContext(
+        tasks: tasks,
+        folders: folders,
+        completionLog: completionLog,
+        totalPoints: points,
+      );
+      unlockedBadgeIds = {
+        for (final badge in computeBadges(badgeContext))
+          if (badge.unlocked) badge.id,
+      };
+      await _profile.setUnlockedBadgeIds(unlockedBadgeIds);
+      await _profile.markBadgesBaselined();
+    }
+
     setState(() {
       _tasks = tasks;
       _folders = folders;
       _completionLog = completionLog;
+      _unlockedBadgeIds = unlockedBadgeIds;
       _showStatusNotification = showStatus;
       _notificationContentMode = contentMode;
+      _pendingOnboarding = isFirstRun;
       _loading = false;
     });
     await _refreshStatusNotification();
+  }
+
+  /// Recomputes badge unlock state against current tasks/folders/completion
+  /// log/points and celebrates any badge that's newly unlocked since the
+  /// last check. Called after any mutation that could plausibly unlock one
+  /// (completing/incrementing a task, creating a folder).
+  Future<void> _checkForNewBadges() async {
+    final points = await _profile.getTotalPoints();
+    final badgeContext = AchievementContext(
+      tasks: _tasks,
+      folders: _folders,
+      completionLog: _completionLog,
+      totalPoints: points,
+    );
+    final newlyUnlocked = computeBadges(badgeContext)
+        .where((b) => b.unlocked && !_unlockedBadgeIds.contains(b.id))
+        .toList();
+    if (newlyUnlocked.isEmpty) return;
+
+    _unlockedBadgeIds = {..._unlockedBadgeIds, for (final b in newlyUnlocked) b.id};
+    await _profile.setUnlockedBadgeIds(_unlockedBadgeIds);
+    if (!mounted) return;
+    for (final badge in newlyUnlocked) {
+      showBadgeUnlockCelebration(context, label: badge.label);
+    }
   }
 
   Future<void> _persist() => _repository.saveTasks(_tasks);
@@ -339,10 +392,17 @@ class _AppShellState extends State<AppShell> {
     ));
   }
 
+  Future<void> _openStats() async {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => StatsScreen(completionLog: _completionLog),
+    ));
+  }
+
   Future<Folder?> _createFolder(String name, int colorValue) async {
     final folder = Folder(id: const Uuid().v4(), name: name, colorValue: colorValue);
     setState(() => _folders = [..._folders, folder]);
     await _persistFolders();
+    await _checkForNewBadges();
     return folder;
   }
 
@@ -531,6 +591,7 @@ class _AppShellState extends State<AppShell> {
     await _persist();
     await _persistCompletionLog();
     await _refreshStatusNotification();
+    if (checked == true) await _checkForNewBadges();
   }
 
   Future<void> _incrementTask(Task task) async {
@@ -541,6 +602,7 @@ class _AppShellState extends State<AppShell> {
     await _persist();
     await _persistCompletionLog();
     await _refreshStatusNotification();
+    await _checkForNewBadges();
   }
 
   Future<void> _decrementTask(Task task) async {
@@ -727,6 +789,16 @@ class _AppShellState extends State<AppShell> {
     if (_loading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
+    if (_pendingOnboarding) {
+      // Cleared synchronously (not via setState) so a second build before
+      // the callback fires can't schedule a duplicate push.
+      _pendingOnboarding = false;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const OnboardingScreen(), fullscreenDialog: true));
+      });
+    }
     return Scaffold(
       body: SafeArea(
         child: IndexedStack(
@@ -739,6 +811,7 @@ class _AppShellState extends State<AppShell> {
               tasks: _tasks,
               onOpenSettings: _openSettings,
               onViewAchievements: _openAchievements,
+              onViewStats: _openStats,
             ),
           ],
         ),

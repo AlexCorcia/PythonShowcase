@@ -8,12 +8,14 @@ class ProfileScreen extends StatefulWidget {
   final List<Task> tasks;
   final VoidCallback onOpenSettings;
   final VoidCallback onViewAchievements;
+  final VoidCallback onViewStats;
 
   const ProfileScreen({
     super.key,
     required this.tasks,
     required this.onOpenSettings,
     required this.onViewAchievements,
+    required this.onViewStats,
   });
 
   @override
@@ -250,6 +252,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ],
           const SizedBox(height: 8),
+          InkWell(
+            onTap: widget.onViewStats,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('View stats & trends',
+                      style: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.primary)),
+                  Icon(Icons.chevron_right, color: colorScheme.primary),
+                ],
+              ),
+            ),
+          ),
           InkWell(
             onTap: widget.onViewAchievements,
             child: Padding(
