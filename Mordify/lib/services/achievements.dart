@@ -21,9 +21,15 @@ class AchievementContext {
 class AchievementBadge {
   final String id;
   final String label;
+  final String description;
   final bool unlocked;
 
-  const AchievementBadge({required this.id, required this.label, required this.unlocked});
+  const AchievementBadge({
+    required this.id,
+    required this.label,
+    required this.description,
+    required this.unlocked,
+  });
 }
 
 /// Whether [log] contains at least one completion on each of 7 consecutive
@@ -52,70 +58,88 @@ typedef _UnlockCheck = bool Function(AchievementContext context);
 class _BadgeDefinition {
   final String id;
   final String label;
+  final String description;
   final _UnlockCheck isUnlocked;
 
-  const _BadgeDefinition({required this.id, required this.label, required this.isUnlocked});
+  const _BadgeDefinition({
+    required this.id,
+    required this.label,
+    required this.description,
+    required this.isUnlocked,
+  });
 }
 
 final List<_BadgeDefinition> _badgeDefinitions = [
   _BadgeDefinition(
     id: 'first_task',
     label: 'First Task',
+    description: 'Complete any task for the first time.',
     isUnlocked: (c) => c.completionLog.isNotEmpty,
   ),
   _BadgeDefinition(
     id: 'streak_7',
     label: '7-Day Streak',
+    description: 'Reach a 7-period streak on any task.',
     isUnlocked: (c) => c.tasks.any((t) => t.currentStreak >= 7),
   ),
   _BadgeDefinition(
     id: 'streak_30',
     label: '30-Day Streak',
+    description: 'Reach a 30-period streak on any task.',
     isUnlocked: (c) => c.tasks.any((t) => t.currentStreak >= 30),
   ),
   _BadgeDefinition(
     id: 'points_100',
     label: '100 Points',
+    description: 'Earn 100 total points.',
     isUnlocked: (c) => c.totalPoints >= 100,
   ),
   _BadgeDefinition(
     id: 'tasks_50',
     label: '50 Tasks',
+    description: 'Complete tasks 50 times in total, across all of them.',
     isUnlocked: (c) => c.tasks.fold<int>(0, (sum, t) => sum + t.totalCompletions) >= 50,
   ),
   _BadgeDefinition(
     id: 'perfect_week',
     label: 'Perfect Week',
+    description: 'Complete at least one task on each of 7 consecutive days.',
     isUnlocked: (c) => _hasSevenDayRun(c.completionLog),
   ),
   _BadgeDefinition(
     id: 'early_bird',
     label: 'Early Bird',
+    description: 'Complete a task before 8 AM.',
     isUnlocked: (c) => c.completionLog.any((r) => r.completedAt.hour < 8),
   ),
   _BadgeDefinition(
     id: 'night_owl',
     label: 'Night Owl',
+    description: 'Complete a task at or after 10 PM.',
     isUnlocked: (c) => c.completionLog.any((r) => r.completedAt.hour >= 22),
   ),
   _BadgeDefinition(
     id: 'folders_3',
     label: '3 Folders',
+    description: 'Organize your tasks into 3 or more folders.',
     isUnlocked: (c) => c.folders.length >= 3,
   ),
   _BadgeDefinition(
     id: 'points_500',
     label: '500 Points',
+    description: 'Earn 500 total points.',
     isUnlocked: (c) => c.totalPoints >= 500,
   ),
   _BadgeDefinition(
     id: 'streak_365',
     label: '365-Day Streak',
+    description: 'Reach a 365-period streak on any task.',
     isUnlocked: (c) => c.tasks.any((t) => t.currentStreak >= 365),
   ),
   _BadgeDefinition(
     id: 'level_20',
     label: 'Level 20',
+    description: 'Reach level 20.',
     isUnlocked: (c) => levelForPoints(c.totalPoints).level >= 20,
   ),
 ];
@@ -125,5 +149,10 @@ final List<_BadgeDefinition> _badgeDefinitions = [
 /// derives level from points. Keeps this immune to desync bugs.
 List<AchievementBadge> computeBadges(AchievementContext context) => [
       for (final def in _badgeDefinitions)
-        AchievementBadge(id: def.id, label: def.label, unlocked: def.isUnlocked(context)),
+        AchievementBadge(
+          id: def.id,
+          label: def.label,
+          description: def.description,
+          unlocked: def.isUnlocked(context),
+        ),
     ];
