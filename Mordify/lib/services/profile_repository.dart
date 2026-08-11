@@ -44,6 +44,11 @@ class ProfileRepository {
     return updated;
   }
 
+  Future<void> setTotalPoints(int value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_totalPointsKey, value.clamp(0, 1 << 31));
+  }
+
   Future<String> getDisplayName() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_displayNameKey) ?? defaultDisplayName;

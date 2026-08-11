@@ -40,6 +40,10 @@ dependencies:
   shared_preferences: ^2.5.5
   uuid: ^4.6.0
   workmanager: ^0.10.7
+  google_fonts: ^6.2.1
+  share_plus: ^11.0.0
+  file_selector: ^1.0.3
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:
@@ -52,11 +56,45 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.6
 
 flutter_launcher_icons:
   android: true
   image_path: "assets/icon/icon.png"
   min_sdk_android: 21
+  # Without an adaptive icon, Android 8+ launchers wrap the flat square PNG
+  # in their own generated background (often white, sometimes tinted by the
+  # wallpaper's Material You palette) instead of the app's own dark brand
+  # color - hence the white/peach halo. adaptive_icon_foreground is the fox
+  # glyph alone (extracted from icon.png, transparent elsewhere, padded to
+  # Android's adaptive-icon safe zone); adaptive_icon_background is the
+  # icon's own dark charcoal fill color, so the launcher composites them
+  # into exactly what the flat icon already looked like.
+  adaptive_icon_background: "#2B2D31"
+  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+  # Android's "Themed icons" (Material You) auto-derives a monochrome
+  # version for any app that doesn't supply one, and visibly rings it with
+  # the wallpaper's accent color to signal the fallback - supplying our own
+  # (same artwork; only the alpha channel matters, color is ignored/tinted
+  # by the system) avoids that ring.
+  adaptive_icon_monochrome: "assets/icon/icon_foreground.png"
+
+# Uses the same padded, transparent-background fox glyph and exact dark
+# charcoal (#2B2D31, sampled from icon.png's own fill) as the adaptive
+# launcher icon above, so the cold-start splash and the home-screen icon
+# read as the same shape/color instead of two subtly different darks.
+flutter_native_splash:
+  color: "#2B2D31"
+  image: assets/icon/icon_foreground.png
+  color_dark: "#2B2D31"
+  image_dark: assets/icon/icon_foreground.png
+  android_12:
+    image: assets/icon/icon_foreground.png
+    icon_background_color: "#2B2D31"
+    color: "#2B2D31"
+    image_dark: assets/icon/icon_foreground.png
+    icon_background_color_dark: "#2B2D31"
+    color_dark: "#2B2D31"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

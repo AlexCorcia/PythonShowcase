@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
+import '../models/completion_record.dart';
 import '../models/folder.dart';
 import '../models/task.dart';
+import '../services/achievements.dart';
+import '../services/backup_service.dart';
 import '../services/default_tasks.dart';
 import '../services/notification_service.dart';
 import '../services/profile_repository.dart';
@@ -14,14 +17,17 @@ import '../widgets/folder_section.dart';
 import '../widgets/points_burst_overlay.dart';
 import '../widgets/settings_sheet.dart';
 import '../widgets/task_tile.dart';
+import 'achievements_screen.dart';
+import 'calendar_screen.dart';
+import 'home_dashboard_screen.dart';
 import 'profile_screen.dart';
 
-/// The frequency the "+" button creates by default on each tab.
-const _tabDefaultFrequency = [
-  TaskFrequency.daily,
-  TaskFrequency.weekly,
-  TaskFrequency.monthly,
-];
+/// The frequency the "+" button creates by default in each Tasks segment.
+const _defaultFrequencyByCategory = {
+  TaskCategory.daily: TaskFrequency.daily,
+  TaskCategory.weekly: TaskFrequency.weekly,
+  TaskCategory.monthly: TaskFrequency.monthly,
+};
 
 const _categoryIcons = {
   TaskCategory.daily: Icons.wb_sunny_outlined,
@@ -29,22 +35,29 @@ const _categoryIcons = {
   TaskCategory.monthly: Icons.calendar_month_outlined,
 };
 
-class HomeScreen extends StatefulWidget {
+/// Owns all app state (tasks, folders, completion log, settings, profile)
+/// and hosts the bottom-nav shell (Home / Tasks / Calendar / Profile) - the
+/// four destinations from design/handoff's mockups. Each destination is a
+/// plain content widget (no nested Scaffold/AppBar); this shell provides the
+/// single outer Scaffold, bottom nav, and (on the Tasks tab) the FAB.
+class AppShell extends StatefulWidget {
   final ThemeController themeController;
 
-  const HomeScreen({super.key, required this.themeController});
+  const AppShell({super.key, required this.themeController});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<AppShell> createState() => _AppShellState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _AppShellState extends State<AppShell> {
   final _repository = TaskRepository();
   final _settings = SettingsRepository();
   final _profile = ProfileRepository();
-  late final TabController _tabController;
+  int _selectedIndex = 0;
+  TaskCategory _selectedCategory = TaskCategory.daily;
   List<Task> _tasks = [];
   List<Folder> _folders = [];
+  List<CompletionRecord> _completionLog = [];
   bool _loading = true;
   bool _showStatusNotification = true;
   NotificationContentMode _notificationContentMode = NotificationContentMode.countsOnly;
@@ -52,15 +65,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this)
-      ..addListener(() => setState(() {}));
     _load();
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
   }
 
   List<Folder> _mergeFolders(List<Folder> existing, List<Folder> additions) {
@@ -141,12 +146,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       await _repository.markSkincareSubtasksSeeded();
     }
 
+    final completionLog = await _repository.loadCompletionLog();
     final showStatus = await _settings.getShowStatusNotification();
     final contentMode = await _settings.getNotificationContentMode();
 
     setState(() {
       _tasks = tasks;
       _folders = folders;
+      _completionLog = completionLog;
       _showStatusNotification = showStatus;
       _notificationContentMode = contentMode;
       _loading = false;
@@ -156,6 +163,38 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   Future<void> _persist() => _repository.saveTasks(_tasks);
   Future<void> _persistFolders() => _repository.saveFolders(_folders);
+  Future<void> _persistCompletionLog() => _repository.saveCompletionLog(_completionLog);
+
+  Folder? _folderForTask(Task task) {
+    if (task.folderId == null) return null;
+    for (final folder in _folders) {
+      if (folder.id == task.folderId) return folder;
+    }
+    return null;
+  }
+
+  void _logCompletion(Task task, DateTime completedAt) {
+    _completionLog.add(CompletionRecord(
+      id: const Uuid().v4(),
+      taskId: task.id,
+      taskTitle: task.title,
+      folderColorValue: _folderForTask(task)?.colorValue,
+      completedAt: completedAt,
+      points: task.lastAwardedPoints,
+    ));
+  }
+
+  /// Undoes exactly one completion of [task] from the log - the most recent
+  /// one, matching how [Task.undoComplete]/[Task.unregisterWeeklyCompletion]
+  /// only ever claw back a single completion at a time.
+  void _unlogLastCompletion(String taskId) {
+    for (var i = _completionLog.length - 1; i >= 0; i--) {
+      if (_completionLog[i].taskId == taskId) {
+        _completionLog.removeAt(i);
+        return;
+      }
+    }
+  }
 
   // Notification-plugin calls hit a real platform channel, which can fail
   // (revoked permission, no handler registered e.g. in tests) - never let
@@ -199,8 +238,105 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         notificationContentMode: _notificationContentMode,
         onNotificationContentModeChanged: _setNotificationContentMode,
         themeController: widget.themeController,
+        onExportBackup: _exportBackup,
+        onImportBackup: _importBackup,
       ),
     );
+  }
+
+  Future<void> _exportBackup() async {
+    try {
+      await BackupService().shareBackup(
+        tasks: _tasks,
+        folders: _folders,
+        completionLog: _completionLog,
+        displayName: await _profile.getDisplayName(),
+        totalPoints: await _profile.getTotalPoints(),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not export backup: $e')),
+      );
+    }
+  }
+
+  Future<void> _importBackup() async {
+    BackupData? picked;
+    try {
+      picked = await BackupService().pickAndParseBackup();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
+      return;
+    }
+    if (picked == null || !mounted) return;
+    final data = picked;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Replace all data?'),
+        content: Text(
+          'This backup has ${data.tasks.length} tasks and ${data.totalPoints} points. '
+          "It will replace everything currently on this device and can't be undone.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Replace'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    for (final task in _tasks) {
+      try {
+        await NotificationService.instance.cancelForTask(task);
+      } catch (_) {}
+    }
+
+    await _repository.saveTasks(data.tasks);
+    await _repository.saveFolders(data.folders);
+    await _repository.saveCompletionLog(data.completionLog);
+    await _profile.setDisplayName(data.displayName);
+    await _profile.setTotalPoints(data.totalPoints);
+    // The backup already reflects a used state - skip the starter-task seed
+    // waves so they don't layer defaults on top of the restored data.
+    await _repository.markDefaultsSeeded();
+    await _repository.markDefaultsSeededV2();
+    await _repository.markFoldersBackfilled();
+    await _repository.markSkincareSubtasksSeeded();
+
+    await _load();
+    for (final task in data.tasks) {
+      await _scheduleTaskSafely(task);
+    }
+    if (!mounted) return;
+    Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Backup restored')),
+    );
+  }
+
+  Future<void> _openAchievements() async {
+    final points = await _profile.getTotalPoints();
+    if (!mounted) return;
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => AchievementsScreen(
+        achievementContext: AchievementContext(
+          tasks: _tasks,
+          folders: _folders,
+          completionLog: _completionLog,
+          totalPoints: points,
+        ),
+      ),
+    ));
   }
 
   Future<Folder?> _createFolder(String name, int colorValue) async {
@@ -381,37 +517,46 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   Future<void> _toggleTask(Task task, bool? checked) async {
     if (checked == true) {
       final points = task.completeOnce();
-      setState(() {});
+      setState(() => _logCompletion(task, task.lastCompletedAt!));
       await _profile.addPoints(points);
-      _showPointsFlare(points, streak: task.currentStreak);
+      _showCompletionCelebration(points, streak: task.currentStreak, taskTitle: task.title);
     } else {
       final lost = task.lastAwardedPoints ?? 0;
-      setState(() => task.undoComplete());
+      setState(() {
+        task.undoComplete();
+        _unlogLastCompletion(task.id);
+      });
       if (lost > 0) await _profile.addPoints(-lost);
     }
     await _persist();
+    await _persistCompletionLog();
     await _refreshStatusNotification();
   }
 
   Future<void> _incrementTask(Task task) async {
     final points = task.registerWeeklyCompletion();
-    setState(() {});
+    setState(() => _logCompletion(task, DateTime.now()));
     await _profile.addPoints(points);
-    _showPointsFlare(points, streak: task.completionsThisWeek);
+    _showCompletionCelebration(points, streak: task.completionsThisWeek, taskTitle: task.title);
     await _persist();
+    await _persistCompletionLog();
     await _refreshStatusNotification();
   }
 
   Future<void> _decrementTask(Task task) async {
     final lost = task.lastAwardedPoints ?? 0;
-    setState(() => task.unregisterWeeklyCompletion());
+    setState(() {
+      task.unregisterWeeklyCompletion();
+      _unlogLastCompletion(task.id);
+    });
     if (lost > 0) await _profile.addPoints(-lost);
     await _persist();
+    await _persistCompletionLog();
     await _refreshStatusNotification();
   }
 
-  void _showPointsFlare(int points, {required int streak}) {
-    showPointsBurst(context, points: points, streak: streak);
+  void _showCompletionCelebration(int points, {required int streak, required String taskTitle}) {
+    showCompletionCelebration(context, points: points, streak: streak, taskTitle: taskTitle);
   }
 
   Future<void> _deleteTask(Task task) async {
@@ -470,8 +615,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     );
   }
 
-  Widget _buildList(int tabIndex) {
-    final category = TaskCategory.values[tabIndex];
+  Widget _buildList(TaskCategory category) {
     final tasksInCategory = _tasks.where((t) => t.category == category).toList();
 
     if (tasksInCategory.isEmpty) {
@@ -534,50 +678,104 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     );
   }
 
+  Widget _buildTasksTab() {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Tasks', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w500)),
+              const SizedBox(height: 14),
+              SegmentedButton<TaskCategory>(
+                segments: const [
+                  ButtonSegment(
+                    value: TaskCategory.daily,
+                    label: Text('Daily', softWrap: false, overflow: TextOverflow.visible),
+                  ),
+                  ButtonSegment(
+                    value: TaskCategory.weekly,
+                    label: Text('Weekly', softWrap: false, overflow: TextOverflow.visible),
+                  ),
+                  ButtonSegment(
+                    value: TaskCategory.monthly,
+                    label: Text('Monthly', softWrap: false, overflow: TextOverflow.visible),
+                  ),
+                ],
+                selected: {_selectedCategory},
+                showSelectedIcon: false,
+                style: const ButtonStyle(
+                  padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 14, vertical: 10)),
+                  visualDensity: VisualDensity.compact,
+                ),
+                onSelectionChanged: (selected) =>
+                    setState(() => _selectedCategory = selected.first),
+              ),
+            ],
+          ),
+        ),
+        Expanded(child: _buildList(_selectedCategory)),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_loading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mordify'),
-        actions: [
-          IconButton(
-            tooltip: 'Profile',
-            icon: const Icon(Icons.person_outline),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => ProfileScreen(tasks: _tasks)),
+      body: SafeArea(
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: [
+            HomeDashboardScreen(tasks: _tasks, folders: _folders, completionLog: _completionLog),
+            _buildTasksTab(),
+            CalendarScreen(completionLog: _completionLog),
+            ProfileScreen(
+              tasks: _tasks,
+              onOpenSettings: _openSettings,
+              onViewAchievements: _openAchievements,
             ),
-          ),
-          IconButton(
-            tooltip: 'Settings',
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: _openSettings,
-          ),
-        ],
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Daily'),
-            Tab(text: 'Weekly'),
-            Tab(text: 'Monthly'),
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildList(0),
-          _buildList(1),
-          _buildList(2),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (index) => setState(() => _selectedIndex = index),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.auto_awesome_outlined),
+            selectedIcon: Icon(Icons.auto_awesome),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.layers_outlined),
+            selectedIcon: Icon(Icons.layers),
+            label: 'Tasks',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.calendar_today_outlined),
+            selectedIcon: Icon(Icons.calendar_today),
+            label: 'Calendar',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _addTask(_tabDefaultFrequency[_tabController.index]),
-        icon: const Icon(Icons.add),
-        label: const Text('Add task'),
-      ),
+      floatingActionButton: _selectedIndex == 1
+          ? FloatingActionButton.extended(
+              onPressed: () => _addTask(_defaultFrequencyByCategory[_selectedCategory]!),
+              icon: const Icon(Icons.add),
+              label: const Text('Add task'),
+            )
+          : null,
     );
   }
 }

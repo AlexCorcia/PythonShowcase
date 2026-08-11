@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/completion_record.dart';
 import '../models/folder.dart';
 import '../models/task.dart';
 
@@ -12,6 +13,7 @@ class TaskRepository {
   static const _seededV2Key = 'mordify.seededDefaultTasksV2';
   static const _backfilledFoldersKey = 'mordify.backfilledFolders';
   static const _seededSkincareSubtasksKey = 'mordify.seededSkincareSubtasksV1';
+  static const _completionLogKey = 'mordify.completionLog';
 
   Future<List<Task>> loadTasks() async {
     final prefs = await SharedPreferences.getInstance();
@@ -83,5 +85,21 @@ class TaskRepository {
   Future<void> markSkincareSubtasksSeeded() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_seededSkincareSubtasksKey, true);
+  }
+
+  Future<List<CompletionRecord>> loadCompletionLog() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString(_completionLogKey);
+    if (raw == null || raw.isEmpty) return [];
+    final list = jsonDecode(raw) as List<dynamic>;
+    return list
+        .map((e) => CompletionRecord.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<void> saveCompletionLog(List<CompletionRecord> log) async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = jsonEncode(log.map((r) => r.toJson()).toList());
+    await prefs.setString(_completionLogKey, raw);
   }
 }

@@ -130,8 +130,8 @@ List<Task> buildDefaultTasksV2() {
 /// Folders backing the default tasks above. Safe to merge into an existing
 /// folder list keyed by id (won't duplicate on repeat seeding).
 List<Folder> buildDefaultFolders() => [
-      Folder(id: skincareFolderId, name: 'Skincare', colorValue: 0xFF00897B),
-      Folder(id: fitnessFolderId, name: 'Fitness', colorValue: 0xFFFB8C00),
-      Folder(id: gymFolderId, name: 'Gym', colorValue: 0xFF5E35B1),
-      Folder(id: workFolderId, name: 'Work', colorValue: 0xFF1E88E5),
+      Folder(id: skincareFolderId, name: 'Skincare', colorValue: 0xFF8FAE86), // sage
+      Folder(id: fitnessFolderId, name: 'Fitness', colorValue: 0xFFC98A68), // terracotta
+      Folder(id: gymFolderId, name: 'Gym', colorValue: 0xFF9A87B0), // dusty plum
+      Folder(id: workFolderId, name: 'Work', colorValue: 0xFF7691B0), // dusty blue
     ];

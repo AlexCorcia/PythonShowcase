@@ -16,6 +16,8 @@ class SettingsSheet extends StatefulWidget {
   final NotificationContentMode notificationContentMode;
   final ValueChanged<NotificationContentMode> onNotificationContentModeChanged;
   final ThemeController themeController;
+  final Future<void> Function() onExportBackup;
+  final Future<void> Function() onImportBackup;
 
   const SettingsSheet({
     super.key,
@@ -24,6 +26,8 @@ class SettingsSheet extends StatefulWidget {
     required this.notificationContentMode,
     required this.onNotificationContentModeChanged,
     required this.themeController,
+    required this.onExportBackup,
+    required this.onImportBackup,
   });
 
   @override
@@ -33,6 +37,16 @@ class SettingsSheet extends StatefulWidget {
 class _SettingsSheetState extends State<SettingsSheet> {
   late bool _showStatusNotification = widget.showStatusNotification;
   late NotificationContentMode _mode = widget.notificationContentMode;
+  bool _backupBusy = false;
+
+  Future<void> _runBackupAction(Future<void> Function() action) async {
+    setState(() => _backupBusy = true);
+    try {
+      await action();
+    } finally {
+      if (mounted) setState(() => _backupBusy = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +112,37 @@ class _SettingsSheetState extends State<SettingsSheet> {
                 onSelectionChanged: (selected) =>
                     widget.themeController.setThemeMode(selected.first),
               ),
+            ),
+            const SizedBox(height: 20),
+            Text('Your data', style: theme.textTheme.labelLarge),
+            const SizedBox(height: 4),
+            Text(
+              'Everything lives only on this device - export a backup so you '
+              "don't lose it if you ever reinstall.",
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed:
+                        _backupBusy ? null : () => _runBackupAction(widget.onExportBackup),
+                    icon: const Icon(Icons.upload_outlined),
+                    label: const Text('Export backup'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed:
+                        _backupBusy ? null : () => _runBackupAction(widget.onImportBackup),
+                    icon: const Icon(Icons.download_outlined),
+                    label: const Text('Import backup'),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'screens/home_screen.dart';
+import 'screens/app_shell.dart';
 import 'services/background_service.dart';
 import 'services/notification_service.dart';
 import 'services/theme_controller.dart';
@@ -29,8 +29,8 @@ class MordifyApp extends StatelessWidget {
           title: 'Mordify',
           themeMode: mode,
           theme: buildTheme(lightColorScheme),
-          darkTheme: buildTheme(darkColorScheme),
-          home: HomeScreen(themeController: themeController),
+          darkTheme: buildNocturneTheme(),
+          home: AppShell(themeController: themeController),
         );
       },
     );

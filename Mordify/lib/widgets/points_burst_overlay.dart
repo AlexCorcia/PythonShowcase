@@ -2,69 +2,79 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../theme/app_theme.dart';
+
 const _confettiColors = [
-  Color(0xFFFFC107), // amber
-  Color(0xFFFF4081), // pink accent
-  Color(0xFF40C4FF), // light blue accent
-  Color(0xFF69F0AE), // green accent
-  Color(0xFFE040FB), // purple accent
-  Color(0xFFFF6E40), // deep orange accent
+  mordifyAmber,
+  nocturneAccent,
+  nocturneSage,
+  nocturneTerracotta,
 ];
 
-/// Fires a one-shot confetti burst + floating "+N points" label, inserted
-/// directly into the nearest [Overlay] and removed automatically once its
-/// animation finishes.
-void showPointsBurst(BuildContext context, {required int points, required int streak}) {
+/// Fires the full-screen completion celebration (dimmed backdrop, confetti,
+/// checkmark, "+N" and streak) from design/handoff's "Task Completion
+/// Moment" mockup. Auto-dismisses after a beat, or immediately on tap so it
+/// never gets in the way of someone checking off several tasks in a row.
+void showCompletionCelebration(
+  BuildContext context, {
+  required int points,
+  required int streak,
+  required String taskTitle,
+}) {
   final overlay = Overlay.of(context);
   late OverlayEntry entry;
   entry = OverlayEntry(
-    builder: (_) => _PointsBurst(
+    builder: (_) => _CompletionCelebration(
       points: points,
       streak: streak,
-      onCompleted: () => entry.remove(),
+      taskTitle: taskTitle,
+      onDismissed: () => entry.remove(),
     ),
   );
   overlay.insert(entry);
 }
 
-class _PointsBurst extends StatefulWidget {
+class _CompletionCelebration extends StatefulWidget {
   final int points;
   final int streak;
-  final VoidCallback onCompleted;
+  final String taskTitle;
+  final VoidCallback onDismissed;
 
-  const _PointsBurst({
+  const _CompletionCelebration({
     required this.points,
     required this.streak,
-    required this.onCompleted,
+    required this.taskTitle,
+    required this.onDismissed,
   });
 
   @override
-  State<_PointsBurst> createState() => _PointsBurstState();
+  State<_CompletionCelebration> createState() => _CompletionCelebrationState();
 }
 
-class _PointsBurstState extends State<_PointsBurst> with SingleTickerProviderStateMixin {
+class _CompletionCelebrationState extends State<_CompletionCelebration>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final List<_Particle> _particles;
+  bool _dismissing = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1100))
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1400))
       ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) widget.onCompleted();
+        if (status == AnimationStatus.completed) widget.onDismissed();
       })
       ..forward();
 
     final random = Random();
-    _particles = List.generate(28, (_) {
-      final angle = -pi / 2 + (random.nextDouble() - 0.5) * pi * 1.4;
-      final speed = 140 + random.nextDouble() * 180;
+    _particles = List.generate(24, (_) {
       return _Particle(
-        angle: angle,
-        speed: speed,
-        color: _confettiColors[random.nextInt(_confettiColors.length)],
+        left: random.nextDouble(),
+        fallDelay: random.nextDouble() * 0.3,
         size: 5 + random.nextDouble() * 6,
-        spin: (random.nextDouble() - 0.5) * 10,
+        rot: random.nextDouble() * 2 * pi,
+        color: _confettiColors[random.nextInt(_confettiColors.length)],
+        round: random.nextBool(),
       );
     });
   }
@@ -75,116 +85,134 @@ class _PointsBurstState extends State<_PointsBurst> with SingleTickerProviderSta
     super.dispose();
   }
 
+  void _dismiss() {
+    if (_dismissing) return;
+    _dismissing = true;
+    // Skip straight to the fade-out tail of the animation instead of
+    // jumping to full completion, which would pop the overlay with no
+    // transition at all.
+    _controller.animateTo(1, duration: const Duration(milliseconds: 180));
+  }
+
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final origin = Offset(screenSize.width / 2, screenSize.height * 0.32);
     final theme = Theme.of(context);
+    final screenSize = MediaQuery.of(context).size;
 
-    return IgnorePointer(
-      child: Stack(
-        children: [
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (context, _) => CustomPaint(
-              size: screenSize,
-              painter: _ConfettiPainter(
-                particles: _particles,
-                progress: _controller.value,
-                origin: origin,
+    return GestureDetector(
+      onTap: _dismiss,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, _) {
+          final t = _controller.value;
+          final entrance = t < 0.15 ? Curves.easeOutBack.transform(t / 0.15) : 1.0;
+          final exitOpacity = t > 0.82 ? (1 - (t - 0.82) / 0.18).clamp(0.0, 1.0) : 1.0;
+
+          return Stack(
+            children: [
+              Positioned.fill(
+                child: Container(color: nocturneBg.withValues(alpha: 0.6 * exitOpacity)),
               ),
-            ),
-          ),
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              final t = _controller.value;
-              final scale = t < 0.2 ? Curves.easeOutBack.transform(t / 0.2) : 1.0;
-              final opacity = t > 0.7 ? (1 - (t - 0.7) / 0.3).clamp(0.0, 1.0) : 1.0;
-              final rise = t > 0.2 ? (t - 0.2) * 40 : 0.0;
-              return Positioned(
-                left: 0,
-                right: 0,
-                top: origin.dy - 40 - rise,
+              for (final p in _particles)
+                _buildParticle(p, t, screenSize, exitOpacity),
+              Center(
                 child: Opacity(
-                  opacity: opacity,
-                  child: Transform.scale(scale: scale, child: child),
-                ),
-              );
-            },
-            child: Column(
-              children: [
-                Text(
-                  '+${widget.points}',
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: theme.colorScheme.primary,
-                    shadows: [Shadow(color: theme.colorScheme.surface, blurRadius: 12)],
+                  opacity: exitOpacity,
+                  child: Transform.scale(
+                    scale: entrance,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 76,
+                          height: 76,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: mordifyAmberDim,
+                            border: Border.all(color: mordifyAmber, width: 2),
+                          ),
+                          child: const Icon(Icons.check, color: mordifyAmber, size: 34),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          '+${widget.points}',
+                          style: theme.textTheme.headlineMedium
+                              ?.copyWith(color: mordifyAmber, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${widget.taskTitle} complete',
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.bodyMedium?.copyWith(color: nocturneText),
+                        ),
+                        if (widget.streak >= 2) ...[
+                          const SizedBox(height: 6),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text('🔥', style: TextStyle(fontSize: 15)),
+                              const SizedBox(width: 5),
+                              Text(
+                                '${widget.streak}-day streak',
+                                style: theme.textTheme.bodyMedium
+                                    ?.copyWith(color: nocturneText, fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
                 ),
-                if (widget.streak >= 2)
-                  Text(
-                    '🔥 ${widget.streak} streak',
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-              ],
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildParticle(_Particle p, double t, Size screenSize, double exitOpacity) {
+    final localT = ((t - p.fallDelay) / (1 - p.fallDelay)).clamp(0.0, 1.0);
+    final top = localT * screenSize.height * 0.9;
+    final opacity = (localT < 0.05 ? localT / 0.05 : (1 - localT).clamp(0.0, 1.0)) * exitOpacity;
+    if (opacity <= 0) return const SizedBox.shrink();
+    return Positioned(
+      left: p.left * screenSize.width,
+      top: top,
+      child: Opacity(
+        opacity: opacity,
+        child: Transform.rotate(
+          angle: p.rot * t * 4,
+          child: Container(
+            width: p.size,
+            height: p.size * (p.round ? 1 : 1.6),
+            decoration: BoxDecoration(
+              color: p.color,
+              shape: p.round ? BoxShape.circle : BoxShape.rectangle,
+              borderRadius: p.round ? null : BorderRadius.circular(1.5),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
 class _Particle {
-  final double angle;
-  final double speed;
-  final Color color;
+  final double left;
+  final double fallDelay;
   final double size;
-  final double spin;
+  final double rot;
+  final Color color;
+  final bool round;
 
   _Particle({
-    required this.angle,
-    required this.speed,
-    required this.color,
+    required this.left,
+    required this.fallDelay,
     required this.size,
-    required this.spin,
+    required this.rot,
+    required this.color,
+    required this.round,
   });
-}
-
-class _ConfettiPainter extends CustomPainter {
-  final List<_Particle> particles;
-  final double progress;
-  final Offset origin;
-
-  _ConfettiPainter({required this.particles, required this.progress, required this.origin});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    const gravity = 420.0;
-    for (final p in particles) {
-      final t = progress;
-      final dx = cos(p.angle) * p.speed * t;
-      final dy = sin(p.angle) * p.speed * t + 0.5 * gravity * t * t;
-      final opacity = (1 - t).clamp(0.0, 1.0);
-      if (opacity <= 0) continue;
-
-      final center = origin + Offset(dx, dy);
-      final paint = Paint()..color = p.color.withValues(alpha: opacity);
-
-      canvas.save();
-      canvas.translate(center.dx, center.dy);
-      canvas.rotate(p.spin * t * pi);
-      canvas.drawRect(
-        Rect.fromCenter(center: Offset.zero, width: p.size, height: p.size * 1.6),
-        paint,
-      );
-      canvas.restore();
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _ConfettiPainter oldDelegate) => true;
 }

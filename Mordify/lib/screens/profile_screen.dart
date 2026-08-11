@@ -2,11 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../models/task.dart';
 import '../services/profile_repository.dart';
+import '../theme/app_theme.dart' show mordifyAmber, mordifyAmberDim;
 
 class ProfileScreen extends StatefulWidget {
   final List<Task> tasks;
+  final VoidCallback onOpenSettings;
+  final VoidCallback onViewAchievements;
 
-  const ProfileScreen({super.key, required this.tasks});
+  const ProfileScreen({
+    super.key,
+    required this.tasks,
+    required this.onOpenSettings,
+    required this.onViewAchievements,
+  });
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -21,6 +29,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    _load();
+  }
+
+  @override
+  void didUpdateWidget(covariant ProfileScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // The bottom-nav shell keeps this screen alive via IndexedStack rather
+    // than recreating it per visit, so points/level (loaded once into local
+    // state) would otherwise go stale after every completion. widget.tasks
+    // gets a new reference on every app-shell rebuild, which is a reliable
+    // signal to refresh.
     _load();
   }
 
@@ -61,7 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final colorScheme = theme.colorScheme;
 
     if (_loading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Center(child: CircularProgressIndicator());
     }
 
     final level = levelForPoints(_totalPoints);
@@ -73,23 +92,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final streakTasks = widget.tasks.where((t) => t.currentStreak >= 2).toList()
       ..sort((a, b) => b.currentStreak.compareTo(a.currentStreak));
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
+    return ListView(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Profile', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w500)),
+              Row(
+                children: [
+                  IconButton(
+                    tooltip: 'Settings',
+                    icon: const Icon(Icons.settings_outlined),
+                    onPressed: widget.onOpenSettings,
+                  ),
+                ],
+              ),
+            ],
+          ),
           Center(
             child: Column(
               children: [
                 GestureDetector(
                   onTap: _renameProfile,
-                  child: CircleAvatar(
-                    radius: 44,
-                    backgroundColor: colorScheme.primaryContainer,
+                  child: Container(
+                    width: 84,
+                    height: 84,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: colorScheme.surfaceContainerHigh,
+                      border: Border.all(color: mordifyAmber, width: 2),
+                    ),
+                    alignment: Alignment.center,
                     child: Text(
                       _initials(_displayName),
                       style: theme.textTheme.headlineMedium
-                          ?.copyWith(color: colorScheme.onPrimaryContainer, fontWeight: FontWeight.bold),
+                          ?.copyWith(color: colorScheme.onSurface, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -105,8 +143,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text('Level ${level.level}', style: theme.textTheme.titleMedium?.copyWith(color: colorScheme.primary)),
+                const SizedBox(height: 6),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: mordifyAmberDim,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text('Level ${level.level}',
+                      style: theme.textTheme.labelMedium?.copyWith(color: mordifyAmber)),
+                ),
               ],
             ),
           ),
@@ -132,6 +178,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       value: level.progress,
                       minHeight: 10,
                       backgroundColor: colorScheme.surfaceContainerHighest,
+                      valueColor: const AlwaysStoppedAnimation(mordifyAmber),
                     ),
                   ),
                 ],
@@ -146,7 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   icon: Icons.stars_rounded,
                   label: 'Points',
                   value: '$_totalPoints',
-                  color: colorScheme.primary,
+                  color: mordifyAmber,
                 ),
               ),
               const SizedBox(width: 12),
@@ -155,7 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   icon: Icons.local_fire_department,
                   label: 'Best streak',
                   value: '$bestStreak',
-                  color: Colors.deepOrange,
+                  color: mordifyAmber,
                 ),
               ),
             ],
@@ -168,7 +215,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   icon: Icons.check_circle,
                   label: 'Completions',
                   value: '$totalCompletions',
-                  color: Colors.teal,
+                  color: colorScheme.primary,
                 ),
               ),
               const SizedBox(width: 12),
@@ -195,16 +242,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       title: Text(task.title),
                       trailing: Text(
                         '${task.currentStreak}',
-                        style: theme.textTheme.titleMedium?.copyWith(color: Colors.deepOrange),
+                        style: theme.textTheme.titleMedium?.copyWith(color: mordifyAmber),
                       ),
                     ),
                 ],
               ),
             ),
           ],
+          const SizedBox(height: 8),
+          InkWell(
+            onTap: widget.onViewAchievements,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('View all badges',
+                      style: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.primary)),
+                  Icon(Icons.chevron_right, color: colorScheme.primary),
+                ],
+              ),
+            ),
+          ),
         ],
-      ),
-    );
+      );
   }
 
   String _initials(String name) {

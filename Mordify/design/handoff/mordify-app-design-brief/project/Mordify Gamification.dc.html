@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body { margin: 0; }
+a { color: #9184d9; }
+a:hover { color: #b5abfc; }
+</style>
+</helmet>
+<div style="--bg:#161826;--surface:#232532;--surface2:#2a2c3b;--text:#e9e9ed;--text-muted:rgba(233,233,237,0.55);--divider:rgba(233,233,237,0.14);--accent:{{ accent }};--accent-2:#a7a1db;--amber:{{ amber }};--amber-dim:{{ amberDim }};--radius-md:8px;--radius-lg:14px;--surface-grad:linear-gradient(155deg, color-mix(in srgb, var(--accent) 9%, var(--surface)), var(--surface) 65%);font-family:'Inter',system-ui,sans-serif;background:#0f1119;min-height:100vh;padding:56px;box-sizing:border-box;">
+
+  <div style="max-width:1000px;margin:0 0 44px;">
+    <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(233,233,237,0.45);margin-bottom:10px;">Mordify · Gamification layer</div>
+    <h1 style="font-family:'Inter',system-ui,sans-serif;font-weight:500;font-size:32px;color:var(--text);margin:0 0 12px;letter-spacing:-0.015em;">Static mockups — 6 screens</h1>
+    <p style="font-size:14px;line-height:1.6;color:var(--text-muted);max-width:640px;margin:0;">Built on the Nocturne system: dark blurple ground, Inter, outlined actions. One rule keeps it from getting noisy — <span style="color:var(--accent)">blurple</span> stays structural (checkboxes, active states, links), and <span style="color:var(--amber)">amber</span>, pulled from the app icon, is reserved only for gamification signals: points, XP, streaks and badges.</p>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:48px;align-items:flex-start;">
+
+    <div data-screen-label="Home Dashboard" style="display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:13px;font-weight:500;color:var(--text-muted);">Home dashboard</div>
+      <x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" width="{{ 390 }}" height="{{ 844 }}" hint-size="390,844">
+        <div style="min-height:100%;display:flex;flex-direction:column;background:var(--bg);">
+          <div style="padding:20px 20px 4px;display:flex;align-items:flex-start;justify-content:space-between;">
+            <div>
+              <div style="font-size:13px;color:var(--text-muted);">Sunday, Aug 9</div>
+              <div style="font-size:24px;font-weight:500;color:var(--text);margin-top:2px;">Nice pace, Alex</div>
+            </div>
+            <svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" style="color:var(--text-muted);margin-top:4px;"><path d="{{ icons.bell }}"></path></svg>
+          </div>
+          <div style="flex:1;padding:18px 20px 0;display:flex;flex-direction:column;gap:18px;">
+            <div style="display:flex;align-items:center;gap:20px;background:var(--surface-grad);border-radius:var(--radius-lg);padding:18px;">
+              <div style="position:relative;width:100px;height:100px;flex:none;">
+                <div style="position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--amber) 0% 71%, var(--divider) 71% 100%);"></div>
+                <div style="position:absolute;inset:9px;border-radius:50%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                  <div style="font-size:20px;font-weight:600;color:var(--text);">5/7</div>
+                  <div style="font-size:10px;color:var(--text-muted);">today</div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div style="font-size:14px;color:var(--text);font-weight:500;">Daily goal</div>
+                <div style="font-size:12px;color:var(--text-muted);">2 tasks left — keep it going</div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:2px;">
+                  <span style="font-size:15px;filter:drop-shadow(0 0 6px color-mix(in srgb, var(--amber) 60%, transparent));">🔥</span>
+                  <span style="font-size:13px;color:var(--text);font-weight:500;">14-day streak</span>
+                  <sc-if value="{{ showFreeze }}" hint-placeholder-val="{{ true }}">
+                    <span style="font-size:11px;color:var(--accent-2);border:1px solid color-mix(in srgb, var(--accent) 45%, transparent);border-radius:20px;padding:2px 8px;margin-left:2px;">{{ streakFreeze.available }} freeze</span>
+                  </sc-if>
+                </div>
+                <div style="display:flex;gap:6px;margin-top:6px;">
+                  <sc-for list="{{ streakCalendar }}" as="d" hint-placeholder-count="7">
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                      <div style="font-size:9px;color:var(--text-muted);">{{ d.label }}</div>
+                      <div style="width:16px;height:16px;border-radius:50%;background:{{ d.doneBg }};border:1.5px solid {{ d.ring }};"></div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+
+            <div style="background:var(--surface-grad);border-radius:var(--radius-lg);padding:16px 18px;">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px;">
+                <span style="font-size:14px;color:var(--text);font-weight:500;">Level 12</span>
+                <span style="font-size:12px;color:var(--text-muted);">180 / 250 XP</span>
+              </div>
+              <div style="height:8px;border-radius:4px;background:var(--divider);overflow:hidden;">
+                <div style="height:100%;width:72%;border-radius:4px;background:linear-gradient(to right, var(--amber), color-mix(in srgb, var(--amber) 70%, white));"></div>
+              </div>
+            </div>
+
+            <div style="background:var(--surface2);border-radius:var(--radius-lg);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <div>
+                <div style="font-size:13px;color:var(--text);font-weight:500;">Last week</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">{{ weeklyRecap.completed }} tasks · best day {{ weeklyRecap.topDay }}</div>
+              </div>
+              <div style="font-size:15px;font-weight:600;color:var(--amber);">+{{ weeklyRecap.points }}</div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:2px;">
+              <div style="font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);margin:2px 0 6px;">Up next</div>
+              <sc-for list="{{ upNext }}" as="task" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:14px;padding:10px 4px;border-bottom:1px solid var(--divider);">
+                  <div style="width:8px;height:8px;border-radius:50%;background:{{ task.color }};flex:none;"></div>
+                  <div style="flex:1;font-size:14px;color:var(--text);">{{ task.title }}</div>
+                  <div style="font-size:12px;color:var(--text-muted);">{{ task.time }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-around;padding:14px 0 10px;border-top:1px solid var(--divider);">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--accent)"><path d="{{ icons.sparkle }}"></path></svg><div style="font-size:11px;color:var(--text);font-weight:600;">Home</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.layers }}"></path></svg><div style="font-size:11px;color:var(--text-muted);">Tasks</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.calendar }}"></path></svg><div style="font-size:11px;color:var(--text-muted);">Calendar</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.user }}"></path></svg><div style="font-size:11px;color:var(--text-muted);">Profile</div></div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div data-screen-label="Task List Daily" style="display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:13px;font-weight:500;color:var(--text-muted);">Tasks — Daily</div>
+      <x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" width="{{ 390 }}" height="{{ 844 }}" hint-size="390,844">
+        <div style="min-height:100%;display:flex;flex-direction:column;background:var(--bg);">
+          <div style="padding:20px 20px 14px;">
+            <div style="font-size:22px;font-weight:500;color:var(--text);margin-bottom:14px;">Tasks</div>
+            <div style="display:inline-flex;border:1px solid var(--divider);border-radius:8px;overflow:hidden;">
+              <div style="padding:7px 16px;font-size:13px;color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);">Daily</div>
+              <div style="padding:7px 16px;font-size:13px;color:var(--text-muted);border-left:1px solid var(--divider);">Weekly</div>
+              <div style="padding:7px 16px;font-size:13px;color:var(--text-muted);border-left:1px solid var(--divider);">Monthly</div>
+            </div>
+          </div>
+          <div style="flex:1;padding:0 16px 16px;display:flex;flex-direction:column;gap:16px;overflow:auto;">
+            <sc-for list="{{ folders }}" as="folder" hint-placeholder-count="3">
+              <div style="border-radius:var(--radius-lg);overflow:hidden;background:color-mix(in srgb, {{ folder.color }} 14%, var(--surface));">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;">
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div style="width:10px;height:10px;border-radius:50%;background:{{ folder.color }};"></div>
+                    <div style="font-size:14px;font-weight:500;color:var(--text);">{{ folder.name }}</div>
+                  </div>
+                  <div style="font-size:11px;color:var(--text-muted);background:var(--bg);padding:3px 9px;border-radius:20px;">{{ folder.done }}/{{ folder.total }}</div>
+                </div>
+                <div style="background:var(--surface);">
+                  <sc-for list="{{ folder.tasks }}" as="task" hint-placeholder-count="2">
+                    <div style="display:flex;align-items:center;gap:14px;padding:11px 14px;border-top:1px solid var(--divider);">
+                      <div style="width:22px;height:22px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;background:{{ task.doneBg }};border:1.5px solid {{ task.doneBorder }};">
+                        <sc-if value="{{ task.done }}" hint-placeholder-val="{{ true }}"><span style="font-size:12px;color:var(--bg);">✓</span></sc-if>
+                      </div>
+                      <div style="flex:1;">
+                        <div style="font-size:14px;color:var(--text);">{{ task.title }}</div>
+                        <sc-if value="{{ task.sub }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:var(--text-muted);margin-top:1px;">{{ task.sub }}</div></sc-if>
+                      </div>
+                      <sc-if value="{{ task.streak }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;align-items:center;gap:3px;font-size:12px;color:var(--amber);"><span>🔥</span>{{ task.streak }}</div>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;justify-content:space-around;padding:14px 0 10px;border-top:1px solid var(--divider);">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.sparkle }}"></path></svg><div style="font-size:11px;color:var(--text-muted);">Home</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--accent)"><path d="{{ icons.layers }}"></path></svg><div style="font-size:11px;color:var(--text);font-weight:600;">Tasks</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.calendar }}"></path></svg><div style="font-size:11px;color:var(--text-muted);">Calendar</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.user }}"></path></svg><div style="font-size:11px;color:var(--text-muted);">Profile</div></div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div data-screen-label="Task Completion Moment" style="display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:13px;font-weight:500;color:var(--text-muted);">Completion moment</div>
+      <x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" width="{{ 390 }}" height="{{ 844 }}" hint-size="390,844">
+        <div style="min-height:100%;position:relative;display:flex;flex-direction:column;background:var(--bg);">
+          <div style="position:absolute;inset:0;background:rgba(15,17,25,0.6);z-index:1;"></div>
+          <sc-for list="{{ confetti }}" as="p" hint-placeholder-count="20">
+            <div style="position:absolute;left:{{ p.left }};top:{{ p.top }};width:{{ p.size }}px;height:{{ p.size }}px;background:{{ p.color }};transform:rotate({{ p.rot }});border-radius:{{ p.radius }};z-index:2;"></div>
+          </sc-for>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:3;">
+            <div style="width:76px;height:76px;border-radius:50%;background:var(--amber-dim);border:2px solid var(--amber);display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:34px;color:var(--amber);">✓</span>
+            </div>
+            <div style="font-size:26px;font-weight:600;color:var(--amber);margin-top:6px;">+15</div>
+            <div style="font-size:13px;color:var(--text);">Morning Routine complete</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:14px;color:var(--text);margin-top:4px;"><span>🔥</span><span style="font-weight:500;">15-day streak</span></div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div data-screen-label="Profile" style="display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:13px;font-weight:500;color:var(--text-muted);">Profile</div>
+      <x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" width="{{ 390 }}" height="{{ 844 }}" hint-size="390,844">
+        <div style="min-height:100%;display:flex;flex-direction:column;background:var(--bg);">
+          <div style="padding:20px 20px 6px;display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:20px;font-weight:500;color:var(--text);">Profile</div>
+            <svg width="19" height="19" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.bell }}"></path></svg>
+          </div>
+          <div style="flex:1;padding:10px 20px 0;display:flex;flex-direction:column;gap:18px;overflow:auto;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px 0 6px;">
+              <div style="width:76px;height:76px;border-radius:50%;background:var(--surface2);border:2px solid var(--amber);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:600;color:var(--text);">AR</div>
+              <div style="font-size:16px;font-weight:500;color:var(--text);">Alex R.</div>
+              <div style="font-size:12px;color:var(--amber);background:var(--amber-dim);padding:3px 10px;border-radius:20px;">Level 12</div>
+            </div>
+            <div style="background:var(--surface-grad);border-radius:var(--radius-lg);padding:14px 16px;">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px;">
+                <span style="font-size:12px;color:var(--text-muted);">Next level</span>
+                <span style="font-size:12px;color:var(--text-muted);">180 / 250 XP</span>
+              </div>
+              <div style="height:6px;border-radius:3px;background:var(--divider);overflow:hidden;">
+                <div style="height:100%;width:72%;border-radius:3px;background:var(--amber);"></div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <sc-for list="{{ stats }}" as="stat" hint-placeholder-count="4">
+                <div style="background:var(--surface);border-radius:var(--radius-md);padding:14px;">
+                  <div style="font-size:19px;font-weight:600;color:var(--text);">{{ stat.value }}</div>
+                  <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">{{ stat.label }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div>
+              <div style="font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Active streaks</div>
+              <sc-for list="{{ streaks }}" as="s" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--divider);">
+                  <div style="width:8px;height:8px;border-radius:50%;background:{{ s.color }};"></div>
+                  <div style="flex:1;font-size:13px;color:var(--text);">{{ s.title }}</div>
+                  <div style="display:flex;align-items:center;gap:3px;font-size:12px;color:var(--amber);"><span>🔥</span>{{ s.days }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <a href="#achievements" style="display:flex;align-items:center;justify-content:space-between;padding:12px 4px;font-size:13px;color:var(--accent);text-decoration:none;border-top:1px solid var(--divider);">View all badges<span>›</span></a>
+          </div>
+          <div style="display:flex;justify-content:space-around;padding:14px 0 10px;border-top:1px solid var(--divider);">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.sparkle }}"></path></svg><div style="font-size:11px;color:var(--text-muted);">Home</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.layers }}"></path></svg><div style="font-size:11px;color:var(--text-muted);">Tasks</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.calendar }}"></path></svg><div style="font-size:11px;color:var(--text-muted);">Calendar</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--accent)"><path d="{{ icons.user }}"></path></svg><div style="font-size:11px;color:var(--text);font-weight:600;">Profile</div></div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div data-screen-label="Achievements" id="achievements" style="display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:13px;font-weight:500;color:var(--text-muted);">Achievements</div>
+      <x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" width="{{ 390 }}" height="{{ 844 }}" hint-size="390,844">
+        <div style="min-height:100%;display:flex;flex-direction:column;background:var(--bg);">
+          <div style="padding:20px 20px 4px;display:flex;align-items:center;gap:12px;">
+            <svg width="18" height="18" viewBox="0 0 256 256" fill="var(--text-muted)" style="transform:rotate(180deg);"><path d="{{ icons.arrow }}"></path></svg>
+            <div style="font-size:20px;font-weight:500;color:var(--text);">Achievements</div>
+          </div>
+          <div style="padding:2px 20px 14px;font-size:12px;color:var(--text-muted);">{{ unlockedCount }} of {{ badgeTotal }} unlocked</div>
+          <div style="flex:1;padding:0 18px 16px;overflow:auto;">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+              <sc-for list="{{ badges }}" as="b" hint-placeholder-count="12">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:7px;opacity:{{ b.opacity }};">
+                  <div style="width:56px;height:56px;border-radius:50%;background:{{ b.bg }};border:2px solid {{ b.border }};display:flex;align-items:center;justify-content:center;">
+                    <sc-if value="{{ b.unlocked }}" hint-placeholder-val="{{ true }}">
+                      <svg width="22" height="22" viewBox="0 0 256 256" fill="var(--bg)"><path d="{{ icons.sparkle }}"></path></svg>
+                    </sc-if>
+                    <sc-if value="{{ b.locked }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;flex-direction:column;align-items:center;">
+                        <div style="width:11px;height:8px;border:2px solid var(--text-muted);border-bottom:none;border-radius:6px 6px 0 0;"></div>
+                        <div style="width:15px;height:11px;background:var(--text-muted);border-radius:2px;"></div>
+                      </div>
+                    </sc-if>
+                  </div>
+                  <div style="font-size:10.5px;text-align:center;line-height:1.25;color:var(--text-muted);">{{ b.label }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-around;padding:14px 0 10px;border-top:1px solid var(--divider);">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.sparkle }}"></path></svg><div style="font-size:11px;color:var(--text-muted);">Home</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.layers }}"></path></svg><div style="font-size:11px;color:var(--text-muted);">Tasks</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.calendar }}"></path></svg><div style="font-size:11px;color:var(--text-muted);">Calendar</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--accent)"><path d="{{ icons.user }}"></path></svg><div style="font-size:11px;color:var(--text);font-weight:600;">Profile</div></div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div data-screen-label="Calendar" style="display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:13px;font-weight:500;color:var(--text-muted);">Calendar</div>
+      <x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" width="{{ 390 }}" height="{{ 844 }}" hint-size="390,844">
+        <div style="min-height:100%;display:flex;flex-direction:column;background:var(--bg);">
+          <div style="padding:20px 20px 10px;display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:20px;font-weight:500;color:var(--text);">August 2026</div>
+            <div style="display:flex;gap:14px;"><svg width="16" height="16" viewBox="0 0 256 256" fill="var(--text-muted)" style="transform:rotate(180deg);"><path d="{{ icons.arrow }}"></path></svg><svg width="16" height="16" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.arrow }}"></path></svg></div>
+          </div>
+          <div style="padding:0 18px;">
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:6px;">
+              <sc-for list="{{ weekdays }}" as="d" hint-placeholder-count="7">
+                <div style="font-size:11px;color:var(--text-muted);padding:4px 0;">{{ d }}</div>
+              </sc-for>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);row-gap:6px;">
+              <sc-for list="{{ calendarDays }}" as="c" hint-placeholder-count="35">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:5px 0;opacity:{{ c.opacity }};">
+                  <sc-if value="{{ c.day }}" hint-placeholder-val="{{ true }}">
+                    <div style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:{{ c.textColor }};border:{{ c.ring }};">{{ c.day }}</div>
+                    <div style="display:flex;gap:2px;height:5px;">
+                      <sc-for list="{{ c.dots }}" as="dot" hint-placeholder-count="0">
+                        <div style="width:5px;height:5px;border-radius:50%;background:{{ dot }};"></div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="flex:1;margin-top:12px;padding:16px 18px;background:var(--surface);border-radius:var(--radius-lg) var(--radius-lg) 0 0;overflow:auto;">
+            <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:10px;">Sat, Aug 8</div>
+            <sc-for list="{{ dayDetail }}" as="e" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--divider);">
+                <div style="width:8px;height:8px;border-radius:50%;background:{{ e.color }};flex:none;"></div>
+                <div style="flex:1;">
+                  <div style="font-size:13px;color:var(--text);">{{ e.title }}</div>
+                  <div style="font-size:11px;color:var(--text-muted);">{{ e.time }}</div>
+                </div>
+                <div style="font-size:12px;color:var(--amber);">+{{ e.points }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;justify-content:space-around;padding:14px 0 10px;border-top:1px solid var(--divider);background:var(--surface);">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.sparkle }}"></path></svg><div style="font-size:11px;color:var(--text-muted);">Home</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.layers }}"></path></svg><div style="font-size:11px;color:var(--text-muted);">Tasks</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--accent)"><path d="{{ icons.calendar }}"></path></svg><div style="font-size:11px;color:var(--text);font-weight:600;">Calendar</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="var(--text-muted)"><path d="{{ icons.user }}"></path></svg><div style="font-size:11px;color:var(--text-muted);">Profile</div></div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;amberAccent&quot;: {&quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#f0a940&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#f0a940&quot;, &quot;#e8935c&quot;, &quot;#d9a441&quot;]}, &quot;badgeUnlockedCount&quot;: {&quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 7, &quot;tsType&quot;: &quot;number&quot;, &quot;min&quot;: 0, &quot;max&quot;: 12, &quot;step&quot;: 1}, &quot;showStreakFreeze&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const accent = '#9184d9';
+    const amber = this.props.amberAccent ?? '#f0a940';
+    const amberDim = `color-mix(in srgb, ${amber} 18%, transparent)`;
+    const sage = '#8fae86', terracotta = '#c98a68', dustyBlue = '#7691b0';
+    const showFreeze = this.props.showStreakFreeze ?? true;
+
+    const icons = {
+      sparkle: 'M197.58,129.06,146,110l-19-51.62a15.92,15.92,0,0,0-29.88,0L78,110l-51.62,19a15.92,15.92,0,0,0,0,29.88L78,178l19,51.62a15.92,15.92,0,0,0,29.88,0L146,178l51.62-19a15.92,15.92,0,0,0,0-29.88ZM137,164.22a8,8,0,0,0-4.74,4.74L112,223.85,91.78,169A8,8,0,0,0,87,164.22L32.15,144,87,123.78A8,8,0,0,0,91.78,119L112,64.15,132.22,119a8,8,0,0,0,4.74,4.74L191.85,144ZM144,40a8,8,0,0,1,8-8h16V16a8,8,0,0,1,16,0V32h16a8,8,0,0,1,0,16H184V64a8,8,0,0,1-16,0V48H152A8,8,0,0,1,144,40ZM248,88a8,8,0,0,1-8,8h-8v8a8,8,0,0,1-16,0V96h-8a8,8,0,0,1,0-16h8V72a8,8,0,0,1,16,0v8h8A8,8,0,0,1,248,88Z',
+      layers: 'M230.91,172A8,8,0,0,1,228,182.91l-96,56a8,8,0,0,1-8.06,0l-96-56A8,8,0,0,1,36,169.09l92,53.65,92-53.65A8,8,0,0,1,230.91,172ZM220,121.09l-92,53.65L36,121.09A8,8,0,0,0,28,134.91l96,56a8,8,0,0,0,8.06,0l96-56A8,8,0,1,0,220,121.09ZM24,80a8,8,0,0,1,4-6.91l96-56a8,8,0,0,1,8.06,0l96,56a8,8,0,0,1,0,13.82l-96,56a8,8,0,0,1-8.06,0l-96-56A8,8,0,0,1,24,80Zm23.88,0L128,126.74,208.12,80,128,33.26Z',
+      calendar: 'M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Zm-96-88v64a8,8,0,0,1-16,0V132.94l-4.42,2.22a8,8,0,0,1-7.16-14.32l16-8A8,8,0,0,1,112,120Zm59.16,30.45L152,176h16a8,8,0,0,1,0,16H136a8,8,0,0,1-6.4-12.8l28.78-38.37A8,8,0,1,0,145.07,132a8,8,0,1,1-13.85-8A24,24,0,0,1,176,136,23.76,23.76,0,0,1,171.16,150.45Z',
+      user: 'M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z',
+      bell: 'M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z',
+      arrow: 'M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z',
+    };
+
+    const streakCalendar = ['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((label, i) => {
+      const done = i < 6;
+      return { label, doneBg: done ? amber : 'transparent', ring: done ? amber : 'var(--divider)' };
+    });
+    const weeklyRecap = { completed: 34, points: 612, topDay: 'Wednesday' };
+    const streakFreeze = { available: 1 };
+
+    const folders = [
+      { name: 'Skincare', color: sage, done: 3, total: 4, tasks: [
+        { title: 'Morning Routine', sub: '4 subtasks', streak: 12, done: true, doneBg: accent, doneBorder: accent },
+        { title: 'Night Routine', sub: '3 subtasks', streak: 9, done: true, doneBg: accent, doneBorder: accent },
+        { title: 'Drink Water', sub: null, streak: 30, done: true, doneBg: accent, doneBorder: accent },
+        { title: 'SPF Reminder', sub: null, streak: 0, done: false, doneBg: 'transparent', doneBorder: 'var(--divider)' },
+      ]},
+      { name: 'Fitness', color: terracotta, done: 1, total: 2, tasks: [
+        { title: '30-min Walk', sub: null, streak: 5, done: true, doneBg: accent, doneBorder: accent },
+        { title: 'Stretch', sub: null, streak: 2, done: false, doneBg: 'transparent', doneBorder: 'var(--divider)' },
+      ]},
+      { name: 'Work', color: dustyBlue, done: 0, total: 1, tasks: [
+        { title: 'Inbox Zero', sub: null, streak: 0, done: false, doneBg: 'transparent', doneBorder: 'var(--divider)' },
+      ]},
+    ];
+
+    const upNext = [
+      { title: 'SPF Reminder', color: sage, time: '8:00 PM' },
+      { title: 'Stretch', color: terracotta, time: '9:00 PM' },
+      { title: 'Inbox Zero', color: dustyBlue, time: 'Anytime' },
+    ];
+
+    const badgeLabels = ['7-Day Streak', '30-Day Streak', '100 Points', 'First Task', '50 Tasks', 'Perfect Week', 'Early Bird', 'Night Owl', '3 Folders', '500 Points', '365-Day Streak', 'Level 20'];
+    const unlockedCount = Math.max(0, Math.min(badgeLabels.length, this.props.badgeUnlockedCount ?? 7));
+    const badges = badgeLabels.map((label, i) => {
+      const unlocked = i < unlockedCount;
+      return {
+        label, unlocked, locked: !unlocked,
+        bg: unlocked ? amber : 'var(--surface2)',
+        border: unlocked ? amber : 'var(--divider)',
+        opacity: unlocked ? 1 : 0.55,
+      };
+    });
+
+    const stats = [
+      { label: 'Points', value: '8,420' },
+      { label: 'Best streak', value: '42 days' },
+      { label: 'Completions', value: '613' },
+      { label: 'Tasks tracked', value: '19' },
+    ];
+
+    const streaks = [
+      { title: 'Drink Water', color: sage, days: 30 },
+      { title: 'Morning Routine', color: sage, days: 12 },
+      { title: '30-min Walk', color: terracotta, days: 5 },
+    ];
+
+    const weekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+    const cycle = [sage, terracotta, dustyBlue];
+    const calendarDays = [];
+    for (let i = 0; i < 3; i++) calendarDays.push({ day: null, dots: [], opacity: 0, ring: 'none', textColor: 'transparent' });
+    for (let day = 1; day <= 31; day++) {
+      const isToday = day === 10;
+      const isFuture = day > 10;
+      let dots = [];
+      if (!isFuture) {
+        const n = (day % 3) + 1;
+        for (let k = 0; k < n; k++) dots.push(cycle[(day + k) % cycle.length]);
+      }
+      calendarDays.push({
+        day, dots,
+        opacity: isFuture ? 0.35 : 1,
+        ring: isToday ? `1.5px solid ${amber}` : 'none',
+        textColor: isFuture ? 'var(--text-muted)' : 'var(--text)',
+      });
+    }
+    while (calendarDays.length < 35) calendarDays.push({ day: null, dots: [], opacity: 0, ring: 'none', textColor: 'transparent' });
+
+    const dayDetail = [
+      { title: 'Morning Routine', color: sage, time: '7:12 AM', points: 10 },
+      { title: 'Drink Water', color: sage, time: '8:03 AM', points: 5 },
+      { title: '30-min Walk', color: terracotta, time: '6:45 PM', points: 15 },
+    ];
+
+    const confettiColors = [amber, accent, sage, terracotta];
+    const confetti = [];
+    for (let i = 0; i < 22; i++) {
+      const seed = i * 37 % 100;
+      confetti.push({
+        left: `${(i * 17) % 100}%`,
+        top: `${(seed * 3) % 100}%`,
+        size: 5 + (i % 3) * 3,
+        rot: `${(i * 53) % 360}deg`,
+        color: confettiColors[i % confettiColors.length],
+        radius: i % 2 === 0 ? '2px' : '50%',
+      });
+    }
+
+    return {
+      accent, amber, amberDim, showFreeze, icons,
+      streakCalendar, weeklyRecap, streakFreeze,
+      folders, upNext, badges, badgeTotal: badgeLabels.length, unlockedCount,
+      stats, streaks, weekdays, calendarDays, dayDetail, confetti,
+    };
+  }
+}
+</script>
+</body>
+</html>

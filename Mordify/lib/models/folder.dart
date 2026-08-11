@@ -32,16 +32,16 @@ class Folder {
 }
 
 /// A fixed, curated palette so folder colors stay legible in both themes
-/// without needing a full custom color picker.
+/// without needing a full custom color picker. Kept low-chroma to match the
+/// Nocturne dark theme's "keep chroma low outside the accent" rule - these
+/// are folder/category colors, not the app's structural accent.
 const List<Color> folderColorPalette = [
-  Color(0xFFE53935), // red
-  Color(0xFFFB8C00), // orange
-  Color(0xFFFDD835), // yellow
-  Color(0xFF43A047), // green
-  Color(0xFF00897B), // teal
-  Color(0xFF1E88E5), // blue
-  Color(0xFF5E35B1), // deep purple
-  Color(0xFF8E24AA), // purple
-  Color(0xFFD81B60), // pink
-  Color(0xFF6D4C41), // brown
+  Color(0xFF8FAE86), // sage
+  Color(0xFFC98A68), // terracotta
+  Color(0xFF7691B0), // dusty blue
+  Color(0xFF9A87B0), // dusty plum
+  Color(0xFFC97A93), // dusty rose
+  Color(0xFFB0A25A), // muted gold
+  Color(0xFF6FA0A0), // muted teal
+  Color(0xFFA0876F), // taupe
 ];

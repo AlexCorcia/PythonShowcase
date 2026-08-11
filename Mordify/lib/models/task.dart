@@ -234,6 +234,13 @@ class Task {
   /// cleanly claw back exactly what was given (no completion history log).
   int? lastAwardedPoints;
 
+  /// Banked "streak freezes" - see [completeOnce] for how they're earned
+  /// (one per full week of streak) and spent (auto-covering exactly one
+  /// missed period so the streak survives instead of resetting).
+  int freezesAvailable;
+
+  static const _maxFreezes = 3;
+
   Task({
     required this.id,
     required this.title,
@@ -254,6 +261,7 @@ class Task {
     this.currentStreak = 0,
     this.totalCompletions = 0,
     this.lastAwardedPoints,
+    this.freezesAvailable = 0,
   })  : subtasks = subtasks ?? [],
         createdAt = createdAt ?? DateTime.now();
 
@@ -315,8 +323,11 @@ class Task {
 
   /// Marks this (non-timesPerWeek) task done for the current period,
   /// extending the streak if the previous completion was in the immediately
-  /// preceding period, or starting a fresh streak otherwise. Returns the
-  /// points awarded.
+  /// preceding period, or starting a fresh streak otherwise - unless exactly
+  /// one period was missed and a streak freeze is banked, in which case the
+  /// freeze is spent to cover the gap and the streak survives. One freeze is
+  /// earned back every 7-period streak milestone, capped at [_maxFreezes].
+  /// Returns the points awarded.
   int completeOnce() {
     final now = DateTime.now();
     final currentPeriod =
@@ -326,10 +337,19 @@ class Task {
         ? null
         : _periodIndexFor(frequency, previous,
             intervalDays: intervalDays, anchorDate: anchorDate);
+    final gap = previousPeriod == null ? null : currentPeriod - previousPeriod;
 
-    currentStreak = (previousPeriod != null && currentPeriod - previousPeriod == 1)
-        ? currentStreak + 1
-        : 1;
+    if (gap == 1) {
+      currentStreak += 1;
+    } else if (gap == 2 && freezesAvailable > 0) {
+      freezesAvailable -= 1;
+      currentStreak += 1;
+    } else {
+      currentStreak = 1;
+    }
+    if (currentStreak % 7 == 0) {
+      freezesAvailable = (freezesAvailable + 1).clamp(0, _maxFreezes);
+    }
     totalCompletions += 1;
     lastCompletedAt = now;
 
@@ -410,6 +430,7 @@ class Task {
         'currentStreak': currentStreak,
         'totalCompletions': totalCompletions,
         'lastAwardedPoints': lastAwardedPoints,
+        'freezesAvailable': freezesAvailable,
       };
 
   factory Task.fromJson(Map<String, dynamic> json) => Task(
@@ -442,6 +463,7 @@ class Task {
         currentStreak: json['currentStreak'] as int? ?? 0,
         totalCompletions: json['totalCompletions'] as int? ?? 0,
         lastAwardedPoints: json['lastAwardedPoints'] as int?,
+        freezesAvailable: json['freezesAvailable'] as int? ?? 0,
       );
 }
 
